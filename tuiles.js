@@ -1,15 +1,18 @@
 /*
  * TODO ::
+ * implementer la gestion de la matrice en 2d
+ * pouvoir colorier plusieurs carreaux en meme temps
+ * implementer modification dynamique de la matrice
  * utiliser un taille minimum pour les carres, donc pouvoir scroller dans le svg si on sort du cadre
  * implementer un zoom
- * implementer la gestion de la matrice en 2d
- * implementer modification dynamique de la matrice
+ * refaire le design
+ * exporter en element html par polyfill
  */
 
 // Variable globale
 var contexte = {
     carresparpied: 4,
-    carres: [],
+    lignes: [],
     compte: {}
 };
 
@@ -23,34 +26,60 @@ window.onload = function initialize () {
     var canvasStyle = contexte.canvas.node().style;
     contexte.svg = contexte.canvas.append("svg").attr("height", canvasStyle.height).attr("width", canvasStyle.width);
     calculerMetriques();
-    createLayout();
+    afficher();
 }
 
 // Calculs
 function calculerMetriques () {
-    contexte.nbcarres = contexte.largeur.value * contexte.carresparpied;
-    contexte.diagonale = contexte.canvas.node().offsetWidth / contexte.nbcarres;
+    contexte.nblignes = contexte.hauteur.value * contexte.carresparpied;
+    contexte.nbcarresligne = contexte.largeur.value * contexte.carresparpied;
+
+    contexte.diagonale = contexte.canvas.node().offsetWidth / contexte.nbcarresligne;
     contexte.cote = diagonaleacote(contexte.diagonale);
     contexte.decalageRotation = (contexte.diagonale - contexte.cote) / 2;
 
     // Construire la matrice des carres
-    contexte.carres = [];
-    for(var i = 0; i < contexte.nbcarres; ++i){
-        contexte.carres.push(i);
+    for(var i = 0; i < contexte.nblignes; ++i)
+    {
+        var ligne = [];
+        var nbcarres = i % 2 === 0 ? contexte.nbcarresligne : contexte.nbcarresligne - 1;
+        for(var j = 0; j < nbcarres; ++j){
+            ligne.push(0);
+        }
+        contexte.lignes.push(ligne);
     }
 }
 
-function createLayout () {
-    contexte.svg.selectAll("rect").data(contexte.carres).enter().append("rect")
+function ajouterLigne () {
+    contexte.svg.selectAll("g.ligne").data(contexte.lignes).enter().append("g")
+    .attr("id", "ligne")
+    .attr("class", "ligne");
+}
+
+function afficher () {
+    // Creation des lignes
+    var groupes = contexte.svg.selectAll("g.lignes").data(contexte.lignes).enter().append("g")
+    .attr("class", "ligne")
+    .attr("transform", function (d, i) { 
+        if(i % 2 === 0){
+            return "translate(0, " + contexte.diagonale * i / 2 + ")" 
+        }
+        else {
+            return "translate(" + contexte.diagonale / 2 + ", " + contexte.diagonale * i / 2 + ")" 
+        }
+    })
+
+    // Creation des carres
+    groupes.selectAll("rect").data(function(d) { return d; }).enter().append("rect")
     .attr("class", "carre")
     .attr("height", contexte.cote)
     .attr("width", contexte.cote)
-    .attr("x", function (d) { return (d * contexte.diagonale) + contexte.decalageRotation })
-    .attr("y", contexte.diagonale / 2)
+    .attr("x", function (d, i) { return (i * contexte.diagonale) + contexte.decalageRotation })
+    .attr("y", contexte.decalageRotation)
     .attr("fill-opacity", 0)
     .attr("stroke", "black")
     .attr("stroke-width", "1px")
-    .on("click", changecolor)
+    .on("click", changecolor);
 }
 
 // Evenements
@@ -77,6 +106,13 @@ function changecolor () {
         element.attr("fill", couleur);
         contexte.compte[couleur] = incremente(contexte.compte[couleur]);
     }
+
+    // Affichage
+    var decompte = "";
+    for(var c in contexte.compte){
+        decompte += c + " : " + contexte.compte[c] + "\n"; 
+    }
+    d3.select("#decompte").node().innerHTML = decompte;
 }
 
 // Utilitaires
