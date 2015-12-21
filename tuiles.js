@@ -1,8 +1,6 @@
 /*
  * TODO ::
- * conserver couleurs
  * implementer efface (clic droit) et nb couleurs limitees
- * utiliser un taille minimum pour les carres, donc pouvoir scroller dans le svg si on sort du cadre
  * implementer un zoom
  * implementer un scroll
  * refaire le design
@@ -52,6 +50,10 @@ window.onload = function initialize () {
     contexte.largeur.onchange = dessiner;
     contexte.canvas.node().onmousedown = function () { contexte.sourisenfoncee = true };
     contexte.canvas.node().onmouseup = function () { contexte.sourisenfoncee = false };
+
+    // Finalisation
+    creationmatriceaffichage();
+    afficher();
 }
 
 // Dessin
@@ -87,23 +89,22 @@ function nettoyer () {
 function ajusterlignes () {
     var voulu = contexte.nblignes;
     var actuel = contexte.lignes.length;
-    if(voulu === actuel) return;
-    else if(voulu < actuel){ // il y en a trop
+    if(voulu === actuel) { return; }
+    else if(voulu < actuel) { // il y en a trop
         var nb = actuel - voulu;
         contexte.lignes.splice(-nb, nb);
     }
     else { // il en manque
         var nb = voulu - actuel;
         var nbcarres = contexte.matrice[0].length;
-        for(var i = 0; i < nb; ++i)
-        {
+        for(var i = 0; i < nb; ++i) {
             if(i % 2 === 0){
-                contexte.lignes.push(creerligne(nbcarres))
-                contexte.matrice.push(creerligne(nbcarres))
+                contexte.lignes.push(creerligne(nbcarres));
+                contexte.matrice.push(creerligne(nbcarres));
             }
             else{
-                contexte.lignes.push(creerligne(nbcarres - 1))
-                contexte.matrice.push(creerligne(nbcarres - 1))
+                contexte.lignes.push(creerligne(nbcarres - 1));
+                contexte.matrice.push(creerligne(nbcarres - 1));
             }
         }
     }
@@ -112,7 +113,7 @@ function ajusterlignes () {
 function ajustercolonnes () {
     var voulu = contexte.nbcarresligne;
     var actuel = contexte.matrice[0].length;
-    if(voulu === actuel) return;
+    if(voulu === actuel) { return; }
     else if (voulu < actuel) { // il y en a trop
         var nb = actuel - voulu;
         contexte.lignes.forEach(function (element) {
@@ -143,9 +144,6 @@ function creerligne (nb) {
     return ligne;
 }
  
-function construirematrice () {
-}
-
 function afficher () {
     // Creation des lignes
     var groupes = contexte.svg.selectAll("g.ligne").data(contexte.lignes).enter().append("g")
@@ -168,9 +166,7 @@ function afficher () {
     .attr("index", function (d, i) { return i})
     .attr("height", contexte.cote)
     .attr("width", contexte.cote)
-    .attr("x", function (d, i) { 
-        return (i * contexte.diagonale) + contexte.decalageRotation
-    })
+    .attr("x", function (d, i) { return (i * contexte.diagonale) + contexte.decalageRotation })
     .attr("y", contexte.decalageRotation)
     .attr("fill-opacity", function(d) { return d.opacity})
     .attr("fill", function(d) { return d.fill })
@@ -188,7 +184,7 @@ function mouseover () {
 function changecolor () {
     var element = d3.select(this);
     var elementNode = element.node();
-    var datum = contexte.matrice[elementNode.getAttribute("index")][elementNode.parentNode.getAttribute("index")];
+    var datum = contexte.matrice[elementNode.parentNode.getAttribute("index")][elementNode.getAttribute("index")];
     var couleur = d3.select("#color").node().value;
 
     if(datum.opacity === 0){
