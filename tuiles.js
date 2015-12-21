@@ -1,11 +1,11 @@
 /*
  * TODO ::
- * implementer efface (clic droit) et nb couleurs limitees
  * implementer un zoom
  * implementer un scroll
  * refaire le design
  *
  * Etape 2
+ * calculateur de prix
  * mettre une image en arriere plan
  * exporter en element html par polyfill
  * calculer par panneau de cloture
@@ -177,31 +177,45 @@ function afficher () {
 }
 
 // Evenements
-function mouseover () {
-   if( contexte.sourisenfoncee ) changecolor.apply(this);
+function mouseover (e) {
+   if( contexte.sourisenfoncee ) changecolor.call(this);
 }
 
 function changecolor () {
     var element = d3.select(this);
     var elementNode = element.node();
     var datum = contexte.matrice[elementNode.parentNode.getAttribute("index")][elementNode.getAttribute("index")];
-    var couleur = d3.select("#color").node().value;
+    var couleur = getCouleur();
 
-    if(datum.opacity === 0){
-        datum.opacity = 1;
+    if(datum.opacity == 0 && couleur.opacity == 0) return; // pas de changement
+    else if(datum.opacity == 0 && couleur.opacity != 0){ // nouvelle case
+        datum.fill = couleur.fill;
+        datum.opacity = couleur.opacity;
+
+        element.attr("fill", datum.fill);
         element.attr("fill-opacity", datum.opacity);
 
-        datum.fill = couleur;
-        element.attr("fill", couleur);
-        contexte.compte[couleur] = incremente(contexte.compte[couleur]);
+        contexte.compte[datum.fill] = incremente(contexte.compte[datum.fill]);
     }
-    else {
-        var ancienneCouleur = datum.fill;
-        contexte.compte[ancienneCouleur] = decremente(contexte.compte[ancienneCouleur]);
+    else if(datum.opacity != 0 && couleur.opacity == 0){ // efface
+        contexte.compte[datum.fill] = decremente(contexte.compte[datum.fill]);
 
-        element.attr("fill", couleur);
-        datum.fill = couleur;
-        contexte.compte[couleur] = incremente(contexte.compte[couleur]);
+        datum.fill = couleur.fill;
+        datum.opacity = couleur.opacity;
+        
+        element.attr("fill", datum.fill);
+        element.attr("fill-opacity", datum.opacity);
+    }
+    else { // changement couleur
+        contexte.compte[datum.fill] = decremente(contexte.compte[datum.fill]);
+        
+        datum.fill = couleur.fill;
+        datum.opacity = couleur.opacity;
+        
+        element.attr("fill", datum.fill);
+        element.attr("fill-opacity", datum.opacity);
+        
+        contexte.compte[datum.fill] = incremente(contexte.compte[datum.fill]);
     }
 
     // Affichage
@@ -210,6 +224,10 @@ function changecolor () {
         decompte += c + " : " + contexte.compte[c] + "\n"; 
     }
     d3.select("#decompte").node().innerHTML = decompte;
+}
+
+function getCouleur () {
+    return {fill: d3.select("#couleur").node().value, opacity: d3.event.altKey ? 0 : 1};
 }
 
 // Utilitaires
@@ -230,3 +248,4 @@ function decremente (valeur) {
 function deepcopy (obj) {
     return JSON.parse(JSON.stringify(obj));
 }
+
