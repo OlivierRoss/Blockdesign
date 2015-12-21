@@ -35,7 +35,7 @@ window.onload = function initialize () {
 
     // Creation du canvas
     var canvasStyle = contexte.canvas.node().style;
-    contexte.svg = contexte.canvas.append("svg").attr("height", canvasStyle.height).attr("width", canvasStyle.width);
+    contexte.svg = contexte.canvas.append("svg").attr("height", canvasStyle.height).attr("width", canvasStyle.width).call(zoom);
 
     // Construction matrice + affichage
     calculerMetriques();
@@ -249,3 +249,11 @@ function deepcopy (obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 
+// Zoom
+var zoom = d3.behavior.zoom()
+    .scaleExtent([1, 10])
+        .on("zoom", zoomed);
+
+function zoomed() {
+      container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
