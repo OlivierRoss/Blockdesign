@@ -1,9 +1,7 @@
 /*
  * TODO ::
  * implementer un zoom
- * implementer un scroll
  * refaire le design
- * envoyer a nico et diane
  *
  * Etape 2
  * calculateur de prix
@@ -24,22 +22,32 @@ xtag.register("x-tuiles", {
                 transform-origin: 50% 50%;
                 transform: rotate(45deg);
             }
+            .echantillon {
+                position: absolute;
+                top: 5px;
+                left: 5px;
+                bottom: 5px;
+                width: 100px;
+            }
+            .compteur {
+                position: absolute;
+                top 5px;
+                bottom: 5px;
+                right: 5px;
+                width: 60px;
+                font-size: 40px;
+            }
         </style>
-        <div id="conteneur">
+        <div id="conteneur" style="padding: 5px;">
+            <div id="canvas" style="width: 100%; height: 200px;"></div>
             <div id="input">
-                <p>Tuiles</p>
                 <label for="hauteur">Hauteur</label>
                 <input type="number" id="hauteur" value="3">
                 <label for="largeur">Largeur</label>
-                <input type="number" id="largeur" value="4">
-                <label for="couleur">Couleur</label>
-                <select id="couleur">
-                    <option value="red">rouge</option>
-                    <option value="black" selected>noir</option>
-                </select>
+                <input type="number" id="largeur" value="6">
             </div>
-            <div id="canvas" style="width: 100%; height: 200px;"></div>
             <div id="decompte"></div>
+            <div id="couleurs" style="width: 300px; height: 200px; overflow: auto;"></div>
         </div>
     */
     },
@@ -48,8 +56,11 @@ xtag.register("x-tuiles", {
             this.carresparpied = 4;
             this.lignes = [];
             this.matrice = [];
-            this.compte = [];
             this.sourisenfoncee = false;
+            this.elementBase = {fill: "#000000", opacity: 0};
+            this.couleurs = {};
+            this.couleur = null;
+            this.ajouterCouleurs([{nom: "noir", code: "black"}, {nom: "rouge", code: "red"}]);
         },
         inserted: function () {
             // Composants
@@ -60,6 +71,19 @@ xtag.register("x-tuiles", {
             // Creation du canvas
             var canvasStyle = this.canvas.node().style;
             this.svg = this.canvas.append("svg").attr("height", canvasStyle.height).attr("width", canvasStyle.width);
+
+            // Creation du choix de couleurs
+            for (var c in this.couleurs) {
+                var couleur = this.couleurs[c];
+                var div = document.createElement("div");
+                div.innerHTML = '<div id="' + couleur.code + '" style="margin: 5px; height: 100px; position: relative;">' +
+                    '<div class="echantillon" style="background-color: ' + couleur.code + ';"></div>' + 
+                    '<div id="compteur-' + couleur.code + '" class="compteur">0</div>' + 
+                '</div>';
+                div.onclick = this.changerCouleur.bind(this);
+                document.getElementById("couleurs").appendChild(div);
+            }
+            this.couleur = "black";
 
             // Construction matrice + affichage
             this.calculerMetriques();
@@ -74,6 +98,7 @@ xtag.register("x-tuiles", {
             this.largeur.onchange = this.dessiner.bind(this);
             this.canvas.node().onmousedown = function () { this.sourisenfoncee = true }.bind(this);
             this.canvas.node().onmouseup = function () { this.sourisenfoncee = false }.bind(this);
+            // TODO : window.onresize = function () { console.log("resize");};
 
             // Finalisation
             this.creationmatriceaffichage();
@@ -81,6 +106,21 @@ xtag.register("x-tuiles", {
         }
     },
     methods: {
+        changerCouleur: function (e) {
+            this.couleur = e.currentTarget.childNodes[0].id;
+        },
+        ajouterCouleurs: function (couleurs) {
+            var me = this;
+            couleurs.forEach(function (couleur) {
+                me.couleurs[couleur.code] = {
+                    compte: 0,
+                    handicap: 0,
+                    nom: couleur.nom,
+                    code: couleur.code,
+                    traduction: {}
+                }
+            });
+        },
         calculerMetriques: function () {
             // Constantes
             this.nblignes = this.hauteur.value * this.carresparpied;
@@ -94,6 +134,7 @@ xtag.register("x-tuiles", {
         },
         creationmatriceaffichage: function () {
             this.lignes = this.deepcopy(this.matrice);
+            this.resetHandicap();
             this.ajusterlignes();
             this.ajustercolonnes();
         },
@@ -102,9 +143,15 @@ xtag.register("x-tuiles", {
             this.creationmatriceaffichage();
             this.nettoyer();
             this.afficher();
+            this.afficherDecompte();
         },
         nettoyer: function () {
             this.svg.selectAll("g.ligne").remove();
+        },
+        resetHandicap: function () {
+            for(var c in this.couleurs){
+                this.couleurs[c].handicap = 0;
+            }
         },
         ajusterlignes: function () {
             var voulu = this.nblignes;
@@ -112,19 +159,31 @@ xtag.register("x-tuiles", {
             if(voulu === actuel) { return; }
             else if(voulu < actuel) { // il y en a trop
                 var nb = actuel - voulu;
-                this.lignes.splice(-nb, nb);
+                var supprimes = this.lignes.splice(-nb, nb);
+
+                // Calculer handicap pour lignes
+                var me = this;
+                supprimes.forEach(function (ligne) {
+                    ligne.forEach(function (element) {
+                        if(element.opacity) {
+                            me.couleurs[element.fill].handicap += 1;
+                        }
+                    });
+                });
             }
             else { // il en manque
                 var nb = voulu - actuel;
                 var nbcarres = this.matrice[0].length;
                 for(var i = 0; i < nb; ++i) {
                     if(i % 2 === 0){
-                        this.lignes.push(this.creerligne(nbcarres));
-                        this.matrice.push(this.creerligne(nbcarres));
+                        var nouveauCarres = this.creerligne(nbcarres);
+                        this.lignes.push(nouveauCarres);
+                        this.matrice.push(nouveauCarres);
                     }
                     else{
-                        this.lignes.push(this.creerligne(nbcarres - 1));
-                        this.matrice.push(this.creerligne(nbcarres - 1));
+                        var nouveauCarres = this.creerligne(nbcarres - 1);
+                        this.lignes.push(nouveauCarres);
+                        this.matrice.push(nouveauCarres);
                     }
                 }
             }
@@ -134,21 +193,30 @@ xtag.register("x-tuiles", {
             var actuel = this.matrice[0].length;
             if(voulu === actuel) { return; }
             else if (voulu < actuel) { // il y en a trop
+                var me = this;
                 var nb = actuel - voulu;
                 this.lignes.forEach(function (element) {
-                    element.splice(-nb, nb); 
-                });
+                    var supprimes = element.splice(-nb, nb); 
+                
+                    // Calculer handicap
+                    supprimes.forEach(function (element) {
+                        if(element.opacity) {
+                            me.couleurs[element.fill].handicap += 1;
+                        }
+                    });
+                })
             }
             else { // il ny en a pas assez
                 var nb = voulu - actuel;
+                var me = this;
                 this.lignes.forEach(function (element) {
                     for(var i = 0; i < nb; ++i){
-                        element.push({fill: "#000000", opacity: 0}); 
+                        element.push(me.deepcopy(me.elementBase)); 
                     }
                 });
                 this.matrice.forEach(function (element) {
                     for(var i = 0; i < nb; ++i){
-                        element.push({fill: "#000000", opacity: 0}); 
+                        element.push(me.deepcopy(me.elementBase)); 
                     }
                 });
             }
@@ -156,7 +224,7 @@ xtag.register("x-tuiles", {
         creerligne: function (nb) {
             var ligne = [];
             for(var i = 0; i < nb; ++i) {
-                ligne.push({fill: "#000000", opacity: 0});
+                ligne.push(this.deepcopy(this.elementBase));
             }
             return ligne;
         },
@@ -178,7 +246,7 @@ xtag.register("x-tuiles", {
             });
 
             // Creation des carres
-            groupes.selectAll("rect").data(function(d) { return d; }).enter().append("rect")
+            groupes.selectAll("rect").data(function(d) { return d; }).enter().append("rect") 
             .attr("index", function (d, i) { return i })
             .attr("class", "carre")
             .attr("index", function (d, i) { return i})
@@ -193,11 +261,22 @@ xtag.register("x-tuiles", {
             .on("mousedown", function () { me.changecolor.call(this, me)} )
             .on("mouseover", function () { if(me.sourisenfoncee) me.changecolor.call(this, me)});
         },
+        afficherDecompte: function () {
+            var decompte = "";
+            for(var c in this.couleurs){
+                var couleur = this.couleurs[c];
+                document.getElementById("compteur-" + couleur.code).innerHTML = couleur.compte - couleur.handicap;
+                //if(couleur.compte - couleur.handicap > 0) {
+                //    decompte += c + " : " + (couleur.compte - couleur.handicap) + "\n"; 
+               // }
+            }
+            //d3.select("#decompte").node().innerHTML = decompte;
+        },
         changecolor: function (me) {
             var element = d3.select(this);
             var elementNode = element.node();
             var datum = me.matrice[elementNode.parentNode.getAttribute("index")][elementNode.getAttribute("index")];
-            var couleur = me.getCouleur();
+            var couleur = me.getCouleur.call(me);
 
             if(datum.opacity == 0 && couleur.opacity == 0) return; // pas de changement
             else if(datum.opacity == 0 && couleur.opacity != 0){ // nouvelle case
@@ -207,10 +286,10 @@ xtag.register("x-tuiles", {
                 element.attr("fill", datum.fill);
                 element.attr("fill-opacity", datum.opacity);
 
-                me.compte[datum.fill] = me.incremente(me.compte[datum.fill]);
+                ++me.couleurs[datum.fill].compte;
             }
             else if(datum.opacity != 0 && couleur.opacity == 0){ // efface
-                me.compte[datum.fill] = me.decremente(me.compte[datum.fill]);
+                --me.couleurs[datum.fill].compte;
 
                 datum.fill = couleur.fill;
                 datum.opacity = couleur.opacity;
@@ -219,7 +298,7 @@ xtag.register("x-tuiles", {
                 element.attr("fill-opacity", datum.opacity);
             }
             else { // changement couleur
-                me.compte[datum.fill] = me.decremente(me.compte[datum.fill]);
+                --me.couleurs[datum.fill].compte;
 
                 datum.fill = couleur.fill;
                 datum.opacity = couleur.opacity;
@@ -227,18 +306,12 @@ xtag.register("x-tuiles", {
                 element.attr("fill", datum.fill);
                 element.attr("fill-opacity", datum.opacity);
 
-                me.compte[datum.fill] = me.incremente(me.compte[datum.fill]);
+                ++me.couleurs[datum.fill].compte;
             }
-
-            // Affichage
-            var decompte = "";
-            for(var c in me.compte){
-                decompte += c + " : " + me.compte[c] + "\n"; 
-            }
-            d3.select("#decompte").node().innerHTML = decompte;
+            me.afficherDecompte();
         },
         getCouleur: function () {
-            return {fill: d3.select("#couleur").node().value, opacity: d3.event.altKey ? 0 : 1};
+            return {fill: this.couleur, opacity: d3.event.altKey ? 0 : 1}; // Si transparence, voir
         },
         coteadiagonale: function (cote) {
             return Math.sqrt(Math.pow(cote, 2) * 2)
@@ -246,19 +319,8 @@ xtag.register("x-tuiles", {
         diagonaleacote: function (diagonale) {
             return Math.sqrt(Math.pow(diagonale, 2) / 2)
         },
-        incremente: function (valeur) {
-            return ++valeur || 1;
-        },
-        decremente: function (valeur) {
-            return valeur === 0 ? 0 : --valeur;
-        },
         deepcopy: function (obj) {
             return JSON.parse(JSON.stringify(obj));
         }
     },
 });
-
-window.onload = function () {
-//    var tuiles = document.createElement("x-tuiles");
-//    document.body.appendChild(tuiles);
-}
