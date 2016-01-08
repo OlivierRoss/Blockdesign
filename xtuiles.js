@@ -37,14 +37,36 @@ xtag.register("x-tuiles", {
                 width: 60px;
                 font-size: 40px;
             }
+            .container-echantillon:hover {
+                background-color: grey;
+            }
+            .container-echantillon {
+                margin: 5px;
+                height: 100px;
+                position: relative;
+            }
+            #conteneur-canvas {
+                position:relative;
+                width: 100%;
+                height: 200px;
+            }
+            #canvas {
+                position:absolute;
+                left: 50px;
+                top: 20px;
+                right: 10px;
+                bottom: 5px;
+            }
         </style>
         <div id="conteneur" style="padding: 5px;">
-            <div id="canvas" style="width: 100%; height: 200px;"></div>
+            <div id="conteneur-canvas">
+                <div id="canvas"></div>
+            </div>
             <div id="input">
                 <label for="hauteur">Hauteur</label>
-                <input type="number" id="hauteur" value="3">
+                <input type="number" id="hauteur" value="2">
                 <label for="largeur">Largeur</label>
-                <input type="number" id="largeur" value="6">
+                <input type="number" id="largeur" value="13">
             </div>
             <div id="decompte"></div>
             <div id="couleurs" style="width: 300px; height: 200px; overflow: auto;"></div>
@@ -68,15 +90,16 @@ xtag.register("x-tuiles", {
             this.largeur = d3.select("#largeur").node();
             this.canvas = d3.select("#canvas");
 
+
             // Creation du canvas
-            var canvasStyle = this.canvas.node().style;
-            this.svg = this.canvas.append("svg").attr("height", canvasStyle.height).attr("width", canvasStyle.width);
+            var canvas = this.canvas.node();
+            this.svg = this.canvas.append("svg").attr("height", canvas.offsetHeight).attr("width", canvas.offsetWidth);
 
             // Creation du choix de couleurs
             for (var c in this.couleurs) {
                 var couleur = this.couleurs[c];
                 var div = document.createElement("div");
-                div.innerHTML = '<div id="' + couleur.code + '" style="margin: 5px; height: 100px; position: relative;">' +
+                div.innerHTML = '<div id="' + couleur.code + '" class="container-echantillon">' +
                     '<div class="echantillon" style="background-color: ' + couleur.code + ';"></div>' + 
                     '<div id="compteur-' + couleur.code + '" class="compteur">0</div>' + 
                 '</div>';
@@ -123,7 +146,7 @@ xtag.register("x-tuiles", {
         },
         calculerMetriques: function () {
             // Constantes
-            this.nblignes = this.hauteur.value * this.carresparpied;
+            this.nblignes = (this.hauteur.value * this.carresparpied * 2) - 1;
             this.nbcarresligne = this.largeur.value * this.carresparpied;
 
             // Calcul de cote
