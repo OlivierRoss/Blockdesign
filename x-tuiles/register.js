@@ -61,6 +61,7 @@ xTuilesElement.lifecycle = {
         this.largeur.onchange = this.dessiner.bind(this);
         this.canvas.node().onmousedown = function () { this.sourisenfoncee = true }.bind(this);
         this.canvas.node().onmouseup = function () { this.sourisenfoncee = false }.bind(this);
+        document.getElementById("export").onclick = function () { this.export() }.bind(this);
         // TODO : window.onresize = function () { console.log("resize");};
 
         // Finalisation

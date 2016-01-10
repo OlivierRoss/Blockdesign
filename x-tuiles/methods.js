@@ -214,5 +214,14 @@ xTuilesElement.methods = {
     },
     deepcopy: function (obj) {
         return JSON.parse(JSON.stringify(obj));
+    },
+    export: function () {
+        var sauvegarde = {};
+        sauvegarde.hauteur = this.hauteur.value;
+        sauvegarde.largeur = this.largeur.value;
+        sauvegarde.matrice = this.matrice;
+        //http://www.noupe.com/design/html5-filesystem-api-create-files-store-locally-using-javascript-webkit.html
+        console.log(sauvegarde);
+        window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(sauvegarde))
     }
 }

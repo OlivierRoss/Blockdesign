@@ -67,6 +67,13 @@ var xTuilesElement = {
                 margin: 0px !important;
                 padding: 0px !important;
             }
+            #conteneur-export {
+                position: absolute;
+                right: 5px;
+                top: 5px;
+                bottom: 0px;
+                width: 30px;
+            }
         </style>
         <div id="conteneur">
             <div id="inputs">
@@ -79,6 +86,7 @@ var xTuilesElement = {
                     <label for="largeur"><i class="fa fa-arrows-h"></i></label>
                     <input type="number" id="largeur" value="13">
                 </div>
+                <div id="conteneur-export"><i id="export" class="fa fa-lg fa-download"></i></div>
             </div>
             <div id="canvas"></div>
             <div id="couleurs" style="width: 300px; height: 200px; overflow: auto;"></div>
