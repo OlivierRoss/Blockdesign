@@ -1,10 +1,8 @@
 /*
  * TODO ::
- * implementer un zoom
  * refaire le design
  *
  * Etape 2
- * calculateur de prix
  * mettre une image en arriere plan
  * calculer par panneau de cloture
  *
@@ -45,30 +43,59 @@ xtag.register("x-tuiles", {
                 height: 100px;
                 position: relative;
             }
-            #conteneur-canvas {
+            #canvas {
                 position:relative;
                 width: 100%;
                 height: 200px;
             }
-            #canvas {
-                position:absolute;
-                left: 50px;
-                top: 20px;
-                right: 10px;
-                bottom: 5px;
+            #inputs {
+                position: relative;
+                height: 30px;
+                background-color: grey;
+            }
+            #conteneur-menu {
+                position: absolute;
+                left: 5px;
+                top: 5px;
+                bottom: 0px;
+                width: 30px;
+            }
+            .fa-bars {
+              color: white;
+            }
+            #conteneur-hauteur {
+                position: absolute;
+                left: 35px;
+                top: 5px;
+                bottom: 0px;
+                width: 170px;
+            }
+            #conteneur-largeur {
+                position: absolute;
+                left: 210px;
+                top: 5px;
+                bottom: 0px;
+                width: 170px;
+            }
+            body {
+                TMP: 00000000000;
+                margin: 0px !important;
+                padding: 0px !important;
             }
         </style>
-        <div id="conteneur" style="padding: 5px;">
-            <div id="conteneur-canvas">
-                <div id="canvas"></div>
+        <div id="conteneur">
+            <div id="inputs">
+                <div id="conteneur-menu"><i id="menu" class="fa fa-lg fa-bars"></i></div>
+                <div id="conteneur-hauteur">
+                    <label for="hauteur"><i class="fa fa-arrows-v"></i></label>
+                    <input type="number" id="hauteur" value="2">
+                </div>
+                <div id="conteneur-largeur">
+                    <label for="largeur"><i class="fa fa-arrows-h"></i></label>
+                    <input type="number" id="largeur" value="13">
+                </div>
             </div>
-            <div id="input">
-                <label for="hauteur">Hauteur</label>
-                <input type="number" id="hauteur" value="2">
-                <label for="largeur">Largeur</label>
-                <input type="number" id="largeur" value="13">
-            </div>
-            <div id="decompte"></div>
+            <div id="canvas"></div>
             <div id="couleurs" style="width: 300px; height: 200px; overflow: auto;"></div>
         </div>
     */
