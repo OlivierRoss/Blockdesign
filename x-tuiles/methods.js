@@ -1,6 +1,17 @@
 xTuilesElement.methods = {
-    changerCouleur: function (e) {
-        this.couleur = e.currentTarget.childNodes[0].id;
+    toggleMenu: function () {
+        document.getElementById("popup-menu").style.display = "block";
+    },
+    changerCouleur: function (ev) {
+        this.setSelectedColor(ev.currentTarget);
+    },
+    setSelectedColor: function (element) {
+        var nodes = document.querySelectorAll(".container-echantillon.selected");
+        for(var i = 0; i < nodes.length; ++i){
+            nodes[i].className = "echantillon";
+        }
+        element.className += " selected";
+        this.couleur = element.id;
     },
     ajouterCouleurs: function (couleurs) {
         var me = this;
@@ -163,7 +174,6 @@ xTuilesElement.methods = {
             //    decompte += c + " : " + (couleur.compte - couleur.handicap) + "\n"; 
             // }
         }
-        //d3.select("#decompte").node().innerHTML = decompte;
     },
     changecolor: function (me) {
         var element = d3.select(this);
@@ -223,5 +233,9 @@ xTuilesElement.methods = {
         //http://www.noupe.com/design/html5-filesystem-api-create-files-store-locally-using-javascript-webkit.html
         console.log(sauvegarde);
         window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(sauvegarde))
+    },
+    import: function (json) {
+        var saved = JSON.parse(json);
+        console.log(saved);
     }
 }

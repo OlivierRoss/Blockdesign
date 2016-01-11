@@ -36,17 +36,23 @@ xTuilesElement.lifecycle = {
         this.svg = this.canvas.append("svg").attr("height", canvas.offsetHeight).attr("width", canvas.offsetWidth);
 
         // Creation du choix de couleurs
+        var width = document.getElementById("footer").offsetWidth / Object.keys(this.couleurs).length;
+        var offset = 0;
         for (var c in this.couleurs) {
             var couleur = this.couleurs[c];
             var div = document.createElement("div");
-            div.innerHTML = '<div id="' + couleur.code + '" class="container-echantillon">' +
-                '<div class="echantillon" style="background-color: ' + couleur.code + ';"></div>' + 
-                '<div id="compteur-' + couleur.code + '" class="compteur">0</div>' + 
-                '</div>';
+            div.id = couleur.code;
+            div.setAttribute("class", "container-echantillon");
+            div.setAttribute("style", "position: absolute; top: 5px; bottom: 5px; left: " + offset + "px; width:" + width + "px;");
+            div.innerHTML = '<div class="echantillon" style="background-color: ' + couleur.code + ';"></div><div id="compteur-' + couleur.code + '" class="compteur"></div>';
             div.onclick = this.changerCouleur.bind(this);
-            document.getElementById("couleurs").appendChild(div);
+            document.getElementById("footer").appendChild(div);
+            couleur.element = div;
+
+            offset += width;
         }
-        this.couleur = "black";
+        // Activer la premiere couleur (noir)
+        this.setSelectedColor(this.couleurs[Object.keys(this.couleurs)[0]].element);
 
         // Construction matrice + affichage
         this.calculerMetriques();
@@ -61,7 +67,8 @@ xTuilesElement.lifecycle = {
         this.largeur.onchange = this.dessiner.bind(this);
         this.canvas.node().onmousedown = function () { this.sourisenfoncee = true }.bind(this);
         this.canvas.node().onmouseup = function () { this.sourisenfoncee = false }.bind(this);
-        document.getElementById("export").onclick = function () { this.export() }.bind(this);
+        document.getElementById("export").onclick = this.export.bind(this);
+        document.getElementById("popup-menu").onclick = this.toggleMenu.bind(this);
         // TODO : window.onresize = function () { console.log("resize");};
 
         // Finalisation
