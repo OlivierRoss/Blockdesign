@@ -1,4 +1,30 @@
 xTuilesElement.methods = {
+    drawColorSamples: function () {
+        var footer = document.getElementById("footer");
+        footer.innerHTML = "";
+        var width = footer.offsetWidth / Object.keys(this.couleurs).length;
+        var offset = 0;
+        for (var c in this.couleurs) {
+            var couleur = this.couleurs[c];
+            var div = document.createElement("div");
+            div.id = couleur.code;
+            div.setAttribute("class", "container-echantillon");
+            div.setAttribute("style", "position: absolute; top: 5px; bottom: 5px; left: " + offset + "px; width:" + width + "px;");
+            div.innerHTML = '<div class="echantillon" style="background-color: ' + couleur.code + ';"></div><div id="compteur-' + couleur.code + '" class="compteur"></div>';
+            div.onclick = this.changerCouleur.bind(this);
+            document.getElementById("footer").appendChild(div);
+            couleur.element = div;
+
+            offset += width;
+        }
+    },
+    drawComponents: function () {
+        var svg = this.svg.node();
+        var canvas = this.canvas.node();
+        svg.offsetWidth = canvas.offsetWidth;
+        this.dessiner();
+        this.drawColorSamples();
+    },
     toggleMenu: function () {
         document.getElementById("popup-menu").style.display = "block";
     },

@@ -77,6 +77,11 @@ var xTuilesElement = {
                 width: 100px;
                 height: 100px;
             }
+            #conteneur{
+                position: relative;
+                width: 100%;
+                height: 260px;
+            }
         </style>
         <div id="conteneur">
             <div id="header">
