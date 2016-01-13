@@ -1,4 +1,7 @@
 xTuilesElement.methods = {
+    drawColorCount: function () {
+
+    },
     drawColorSamples: function () {
         var footer = document.getElementById("footer");
         footer.innerHTML = "";
@@ -10,10 +13,11 @@ xTuilesElement.methods = {
             div.id = couleur.code;
             div.setAttribute("class", "container-echantillon");
             div.setAttribute("style", "position: absolute; top: 5px; bottom: 5px; left: " + offset + "px; width:" + width + "px;");
-            div.innerHTML = '<div class="echantillon" style="background-color: ' + couleur.code + ';"></div><div id="compteur-' + couleur.code + '" class="compteur"></div>';
+            div.innerHTML = '<div class="echantillon" style="background-color: ' + couleur.code + ';"></div>';
             div.onclick = this.changerCouleur.bind(this);
             document.getElementById("footer").appendChild(div);
             couleur.element = div;
+            document.getElementById("menu").innerHTML += '<div id="compteur-' + couleur.code + '" class="compteur"></div>';
 
             offset += width;
         }
@@ -26,7 +30,18 @@ xTuilesElement.methods = {
         this.drawColorSamples();
     },
     toggleMenu: function () {
-        document.getElementById("popup-menu").style.display = "block";
+        document.getElementById("conteneur").style.left = document.getElementById("menu").style.width = this.menuHidden ? "100px": "0px" ;
+        window.setTimeout(this.drawComponents.bind(this), 100);
+        window.setTimeout(this.drawComponents.bind(this), 200);
+        window.setTimeout(this.drawComponents.bind(this), 300);
+        window.setTimeout(this.drawComponents.bind(this), 400);
+        window.setTimeout(this.drawComponents.bind(this), 500);
+        window.setTimeout(this.drawComponents.bind(this), 600);
+        window.setTimeout(this.drawComponents.bind(this), 700);
+        window.setTimeout(this.drawComponents.bind(this), 800);
+        window.setTimeout(this.drawComponents.bind(this), 900);
+        window.setTimeout(this.drawComponents.bind(this), 1000);
+        this.menuHidden = !this.menuHidden;
     },
     changerCouleur: function (ev) {
         this.setSelectedColor(ev.currentTarget);

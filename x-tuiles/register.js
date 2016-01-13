@@ -1,3 +1,13 @@
+/*
+ * TODO
+ *
+ * Panneau de menu sur la gauche avec transition qui slide et prend de la place de la cloture
+ * Installer les compteurs dans le menu
+ *
+ *
+ *
+ */
+
 xTuilesElement.lifecycle = {
     created: function () {
         // Variables globales
@@ -9,6 +19,7 @@ xTuilesElement.lifecycle = {
         this.couleurs = {};
         this.couleur = null;
         this.ajouterCouleurs([{nom: "noir", code: "black"}, {nom: "rouge", code: "red"}]);
+        this.menuHidden = true;
         
         // Composants
         this.hauteur = d3.select("#hauteur").node();
@@ -38,7 +49,7 @@ xTuilesElement.lifecycle = {
         this.canvas.node().onmousedown = function () { this.sourisenfoncee = true }.bind(this);
         this.canvas.node().onmouseup = function () { this.sourisenfoncee = false }.bind(this);
         document.getElementById("export").onclick = this.export.bind(this);
-        document.getElementById("popup-menu").onclick = this.toggleMenu.bind(this);
+        document.getElementById("bouton-menu").onclick = this.toggleMenu.bind(this);
         window.onresize = this.drawComponents.bind(this);
 
         // Finalisation

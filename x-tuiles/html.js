@@ -16,12 +16,7 @@ var xTuilesElement = {
                 right: 5px;
             }
             .compteur {
-                position: absolute;
-                top 5px;
-                bottom: 5px;
-                right: 5px;
-                width: 60px;
-                font-size: 40px;
+                color: white;
             }
             #canvas {
                 position:relative;
@@ -77,15 +72,30 @@ var xTuilesElement = {
                 width: 100px;
                 height: 100px;
             }
-            #conteneur{
-                position: relative;
-                width: 100%;
-                height: 260px;
+            #conteneur {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                bottom: 0px;
+                right: 0px;
+                transition: left 1s ease;
+            }
+            #menu {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                bottom: 0px;
+                width: 0px;
+                background-color: black;
+                transition: width 1s ease;
             }
         </style>
+        <div id="menu">
+            
+        </div>
         <div id="conteneur">
             <div id="header">
-                <div id="conteneur-menu"><i id="menu" class="fa fa-lg fa-bars"></i></div>
+                <div id="conteneur-menu"><i id="bouton-menu" class="fa fa-lg fa-bars"></i></div>
                 <div id="conteneur-hauteur">
                     <label for="hauteur"><i class="fa fa-lg fa-arrows-v"></i></label>
                     <input type="number" id="hauteur" value="2">
