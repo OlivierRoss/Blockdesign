@@ -59,7 +59,7 @@ xTuilesElement.methods = {
         window.setTimeout(this.drawComponents.bind(this), 900);
         window.setTimeout(this.drawComponents.bind(this), 1000);
         this.menuHidden = !this.menuHidden;
-        console.log(getSmallestMatrix(this.matrice));
+        //getSmallestMatrix(this.matrice);
     },
     changerCouleur: function (ev) {
         this.setSelectedColor(ev.currentTarget);
@@ -137,17 +137,15 @@ xTuilesElement.methods = {
         else { // il en manque
             var nb = voulu - actuel;
             var nbcarres = this.matrice[0].length;
-            for(var i = 0; i < nb; ++i) {
-                if(i % 2 === 0){
-                    var nouveauCarres = this.creerligne(nbcarres);
-                    this.lignes.push(nouveauCarres);
-                    this.matrice.push(nouveauCarres);
-                }
-                else{
-                    var nouveauCarres = this.creerligne(nbcarres - 1);
-                    this.lignes.push(nouveauCarres);
-                    this.matrice.push(nouveauCarres);
-                }
+            var i = 0;
+            if(this.matrice[this.matrice.length-1].length == nbcarres){ // If its not the first time HACK
+                ++i;
+                ++nb;
+            }
+            for(; i < nb; ++i) {
+                var nouveauCarres = this.creerligne(i % 2 == 0 ? nbcarres : nbcarres - 1);
+                this.lignes.push(nouveauCarres);
+                this.matrice.push(nouveauCarres);
             }
         }
     },
