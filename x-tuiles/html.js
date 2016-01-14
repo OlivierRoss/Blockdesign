@@ -16,7 +16,9 @@ var xTuilesElement = {
                 right: 5px;
             }
             .compteur {
-                color: white;
+                text-align: center;
+                height: 30px; 
+                padding: 5px;
             }
             #canvas {
                 position:relative;
@@ -62,7 +64,19 @@ var xTuilesElement = {
                 top: 8px;
                 width: 30px;
             }
-            .fa-bars, .fa-arrows-v, .fa-arrows-h, .fa-download {
+            #conteneur-final {
+                position: absolute;
+                right: 35px;
+                top: 8px;
+                width: 30px;
+            }
+            #conteneur-pdf {
+                position: absolute;
+                right: 65px;
+                top: 6px;
+                width: 30px;
+            }
+            .fa-bars, .fa-arrows-v, .fa-arrows-h, .fa-download, .fa-check, .fa-file-pdf-o {
               color: white;
             }
             #popup-menu {
@@ -86,13 +100,11 @@ var xTuilesElement = {
                 top: 0px;
                 bottom: 0px;
                 width: 0px;
-                background-color: black;
+                background-color: grey;
                 transition: width 1s ease;
             }
         </style>
-        <div id="menu">
-            
-        </div>
+        <div id="menu"></div>
         <div id="conteneur">
             <div id="header">
                 <div id="conteneur-menu"><i id="bouton-menu" class="fa fa-lg fa-bars"></i></div>
@@ -104,6 +116,8 @@ var xTuilesElement = {
                     <label for="largeur"><i class="fa fa-lg fa-arrows-h"></i></label>
                     <input type="number" id="largeur" value="13">
                 </div>
+                <div id="conteneur-pdf"><i id="pdf" class="fa fa-lg fa-file-pdf-o"></i></div>
+                <div id="conteneur-final"><i id="final" class="fa fa-lg fa-check"></i></div>
                 <div id="conteneur-export"><i id="export" class="fa fa-lg fa-download"></i></div>
             </div>
             <div id="canvas"></div>

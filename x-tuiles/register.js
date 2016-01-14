@@ -1,10 +1,8 @@
 /*
  * TODO
  *
- * Panneau de menu sur la gauche avec transition qui slide et prend de la place de la cloture
- * Installer les compteurs dans le menu
- *
- *
+ * Changer couleurs avec opacite pour valeur rgba
+ * Enlever concept de traduction et de nom de couleur
  *
  */
 
@@ -49,6 +47,7 @@ xTuilesElement.lifecycle = {
         this.canvas.node().onmousedown = function () { this.sourisenfoncee = true }.bind(this);
         this.canvas.node().onmouseup = function () { this.sourisenfoncee = false }.bind(this);
         document.getElementById("export").onclick = this.export.bind(this);
+        document.getElementById("final").onclick = this.finalExport.bind(this);
         document.getElementById("bouton-menu").onclick = this.toggleMenu.bind(this);
         window.onresize = this.drawComponents.bind(this);
 

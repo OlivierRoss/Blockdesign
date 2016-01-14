@@ -1,6 +1,15 @@
 xTuilesElement.methods = {
+    writeExtraitMatrice: function (x, y, matrice) {
+        var me = this;
+        matrice.forEach(function (line, indexLigne) {
+            line.forEach(function (tuile, indexColonne) {
+                me.matrice[x + indexLigne][y + indexColonne] = tuile; 
+            });
+        });
+        this.dessiner();
+    },
     drawColorCount: function () {
-
+        
     },
     drawColorSamples: function () {
         var footer = document.getElementById("footer");
@@ -17,7 +26,7 @@ xTuilesElement.methods = {
             div.onclick = this.changerCouleur.bind(this);
             document.getElementById("footer").appendChild(div);
             couleur.element = div;
-            document.getElementById("menu").innerHTML += '<div id="compteur-' + couleur.code + '" class="compteur"></div>';
+            document.getElementById("menu").innerHTML += '<div id="compteur-' + couleur.code + '" class="compteur" style="color: ' + couleur.code + '"></div>';
 
             offset += width;
         }
@@ -30,6 +39,14 @@ xTuilesElement.methods = {
         this.drawColorSamples();
     },
     toggleMenu: function () {
+        if(this.menuHidden){
+            document.getElementById("conteneur").style.left = "100px;"
+            document.getElementById("menu").style.width = "100px;"
+        }
+        else {
+            document.getElementById("conteneur").style.left = "0px;"
+            document.getElementById("menu").style.width = "0px;"
+        }
         document.getElementById("conteneur").style.left = document.getElementById("menu").style.width = this.menuHidden ? "100px": "0px" ;
         window.setTimeout(this.drawComponents.bind(this), 100);
         window.setTimeout(this.drawComponents.bind(this), 200);
@@ -42,6 +59,7 @@ xTuilesElement.methods = {
         window.setTimeout(this.drawComponents.bind(this), 900);
         window.setTimeout(this.drawComponents.bind(this), 1000);
         this.menuHidden = !this.menuHidden;
+        console.log(getSmallestMatrix(this.matrice));
     },
     changerCouleur: function (ev) {
         this.setSelectedColor(ev.currentTarget);
@@ -271,9 +289,10 @@ xTuilesElement.methods = {
         sauvegarde.hauteur = this.hauteur.value;
         sauvegarde.largeur = this.largeur.value;
         sauvegarde.matrice = this.matrice;
-        //http://www.noupe.com/design/html5-filesystem-api-create-files-store-locally-using-javascript-webkit.html
-        console.log(sauvegarde);
         window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(sauvegarde))
+    },
+    finalExport: function () {
+        window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(getSmallestMatrix(this.matrice)));
     },
     import: function (json) {
         var saved = JSON.parse(json);
