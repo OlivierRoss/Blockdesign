@@ -16,7 +16,17 @@ xTuilesElement.lifecycle = {
         this.elementBase = {fill: "#000000", opacity: 0};
         this.couleurs = {};
         this.couleur = null;
-        this.ajouterCouleurs([{nom: "noir", code: "black"}, {nom: "rouge", code: "red"}]);
+        this.ajouterCouleurs([{nom: "noir", code: "#000000"},
+                              {nom: "gris", code: "#97999B"},
+                              {nom: "blanc", code: "#FFFFFF"},
+                              {nom: "rouge", code: "#BA0C2F"},
+                              {nom: "orange", code: "#FE5000"},
+                              {nom: "jaune", code: "#FFCD00"},
+                              {nom: "vert", code: "#00B140"},
+                              {nom: "vert fonce", code: "#006747"},
+                              {nom: "bleu", code: "#004B87"},
+                              {nom: "cyan", code: "#0085CA"},
+                              {nom: "bleu fonce", code: "#002855"}]);
         this.menuHidden = true;
         
         // Composants
