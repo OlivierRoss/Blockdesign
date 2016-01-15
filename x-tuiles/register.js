@@ -28,6 +28,7 @@ xTuilesElement.lifecycle = {
                               {nom: "cyan", code: "#0085CA"},
                               {nom: "bleu fonce", code: "#002855"}]);
         this.menuHidden = true;
+        this.menuWidth = "150px";
         
         // Composants
         this.hauteur = d3.select("#hauteur").node();

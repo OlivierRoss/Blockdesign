@@ -40,8 +40,8 @@ xTuilesElement.methods = {
     },
     toggleMenu: function () {
         if(this.menuHidden){
-            document.getElementById("conteneur").style.left = "100px;"
-            document.getElementById("menu").style.width = "100px;"
+            document.getElementById("conteneur").style.left = this.menuWidth;
+            document.getElementById("menu").style.width = this.menuWidth;
         }
         else {
             document.getElementById("conteneur").style.left = "0px;"
