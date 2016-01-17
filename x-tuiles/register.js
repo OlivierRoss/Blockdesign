@@ -60,6 +60,7 @@ xTuilesElement.lifecycle = {
         document.getElementById("export").onclick = this.export.bind(this);
         document.getElementById("final").onclick = this.finalExport.bind(this);
         document.getElementById("bouton-menu").onclick = this.toggleMenu.bind(this);
+        document.getElementById("import").onclick = this.import.bind(this);
         window.onresize = this.drawComponents.bind(this);
 
         // Finalisation

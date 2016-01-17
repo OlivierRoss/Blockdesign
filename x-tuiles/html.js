@@ -1,6 +1,27 @@
 var xTuilesElement = {
     content: function () {/*
         <style>
+            .sample {
+                position: absolute;
+                left: 5px;
+                top: 5px;
+                bottom: 5px;
+                width: 50px;
+                border: 1px solid black;
+                border-radius: 5px;
+            }
+            .counter-container {
+                position: relative;
+                width: calc(100% - 10px);
+                height: 25px;
+                margin: 5px;
+            }
+            .counter {
+                position: absolute;
+                right: 5px;
+                top: 5px;
+                bottom: 5px;
+            }
             .carre {
                 transform-origin: 50% 50%;
                 transform: rotate(45deg);
@@ -76,7 +97,13 @@ var xTuilesElement = {
                 top: 6px;
                 width: 30px;
             }
-            .fa-bars, .fa-arrows-v, .fa-arrows-h, .fa-download, .fa-check, .fa-file-pdf-o {
+            #conteneur-import {
+                position: absolute;
+                right: 95px;
+                top: 6px;
+                width: 30px;
+            }
+            .fa-bars, .fa-arrows-v, .fa-arrows-h, .fa-download, .fa-upload, .fa-check, .fa-file-pdf-o {
               color: white;
             }
             #popup-menu {
@@ -102,6 +129,7 @@ var xTuilesElement = {
                 width: 0px;
                 background-color: grey;
                 transition: width 1s ease;
+                transition: opacity 1s ease;
             }
         </style>
         <div id="menu"></div>
@@ -116,6 +144,7 @@ var xTuilesElement = {
                     <label for="largeur"><i class="fa fa-lg fa-arrows-h"></i></label>
                     <input type="number" id="largeur" value="13">
                 </div>
+                <div id="conteneur-import"><i id="import" class="fa fa-lg fa-upload"></i></div>
                 <div id="conteneur-pdf"><i id="pdf" class="fa fa-lg fa-file-pdf-o"></i></div>
                 <div id="conteneur-final"><i id="final" class="fa fa-lg fa-check"></i></div>
                 <div id="conteneur-export"><i id="export" class="fa fa-lg fa-download"></i></div>

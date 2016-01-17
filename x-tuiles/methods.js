@@ -8,26 +8,21 @@ xTuilesElement.methods = {
         });
         this.dessiner();
     },
-    drawColorCount: function () {
-        
+    drawColorCounters: function () { // Nest pas appelee
+        for(var c in this.couleurs){
+            this.createCounter(this.couleurs[c].code);
+        }
     },
     drawColorSamples: function () {
         var footer = document.getElementById("footer");
-        footer.innerHTML = "";
+        var menu = document.getElementById("menu");
+        footer.innerHTML = menu.innerHTML = "";
         var width = footer.offsetWidth / Object.keys(this.couleurs).length;
         var offset = 0;
         for (var c in this.couleurs) {
             var couleur = this.couleurs[c];
-            var div = document.createElement("div");
-            div.id = couleur.code;
-            div.setAttribute("class", "container-echantillon");
-            div.setAttribute("style", "position: absolute; top: 5px; bottom: 5px; left: " + offset + "px; width:" + width + "px;");
-            div.innerHTML = '<div class="echantillon" style="background-color: ' + couleur.code + ';"></div>';
-            div.onclick = this.changerCouleur.bind(this);
-            document.getElementById("footer").appendChild(div);
-            couleur.element = div;
-            document.getElementById("menu").innerHTML += '<div id="compteur-' + couleur.code + '" class="compteur" style="color: ' + couleur.code + '"></div>';
-
+            this.createCounter(couleur.code);
+            this.createPickerSample(couleur, width, offset);
             offset += width;
         }
     },
@@ -39,14 +34,19 @@ xTuilesElement.methods = {
         this.drawColorSamples();
     },
     toggleMenu: function () {
+        var menu = document.getElementById("menu");
+        var conteneur = document.getElementById("conteneur");
         if(this.menuHidden){
-            document.getElementById("conteneur").style.left = this.menuWidth;
-            document.getElementById("menu").style.width = this.menuWidth;
+            conteneur.style.left = this.menuWidth;
+            menu.style.width = this.menuWidth;
+            menu.style.opacity = 100;
         }
         else {
-            document.getElementById("conteneur").style.left = "0px;"
-            document.getElementById("menu").style.width = "0px;"
+            conteneur.style.left = "0px";
+            menu.style.width = "0px";
+            menu.style.opacity = 0;
         }
+
         document.getElementById("conteneur").style.left = document.getElementById("menu").style.width = this.menuHidden ? "100px": "0px" ;
         window.setTimeout(this.drawComponents.bind(this), 100);
         window.setTimeout(this.drawComponents.bind(this), 200);
@@ -226,7 +226,7 @@ xTuilesElement.methods = {
         var decompte = "";
         for(var c in this.couleurs){
             var couleur = this.couleurs[c];
-            document.getElementById("compteur-" + couleur.code).innerHTML = couleur.compte - couleur.handicap;
+            document.getElementById(couleur.code + "-counter").innerHTML = couleur.compte - couleur.handicap;
             //if(couleur.compte - couleur.handicap > 0) {
             //    decompte += c + " : " + (couleur.compte - couleur.handicap) + "\n"; 
             // }
@@ -282,18 +282,43 @@ xTuilesElement.methods = {
     deepcopy: function (obj) {
         return JSON.parse(JSON.stringify(obj));
     },
+
+    // Events
     export: function () {
         var sauvegarde = {};
         sauvegarde.hauteur = this.hauteur.value;
         sauvegarde.largeur = this.largeur.value;
         sauvegarde.matrice = this.matrice;
-        window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(sauvegarde))
+        //window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(sauvegarde))
+        var uriContent = "data:application/octet-stream," + encodeURIComponent(JSON.stringify(sauvegarde));
+        window.open(uriContent, 'neuesDokument');
+        //download('test.txt', 'Hello world!');
     },
     finalExport: function () {
         window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(getSmallestMatrix(this.matrice)));
     },
-    import: function (json) {
-        var saved = JSON.parse(json);
-        console.log(saved);
+    import: function () {
+        var fichier = window.prompt("Copier le contenu du fichier", "");
+        console.log(JSON.parse(fichier));
+    },
+
+    // Element creation
+    createCounter: function (color) {
+       var div = document.createElement("div"); 
+       div.id = color + "-counter-container";
+       div.setAttribute("class", "counter-container");
+       div.innerHTML = '<div id="' + color + '-sample" class="sample" style="background-color: ' + color + '"></div><div id="' + color + '-counter" class="counter"></div>'
+       document.getElementById("menu").appendChild(div);
+    },
+    createPickerSample: function (color, width, offset) {
+        var div = document.createElement("div");
+        div.id = color.code;
+        div.setAttribute("class", "container-echantillon");
+        div.setAttribute("style", "position: absolute; top: 5px; bottom: 5px; left: " + offset + "px; width:" + width + "px;");
+        div.innerHTML = '<div class="echantillon" style="background-color: ' + color.code + ';"></div>';
+        div.onclick = this.changerCouleur.bind(this);
+        document.getElementById("footer").appendChild(div);
+        color.element = div;
     }
 }
+
