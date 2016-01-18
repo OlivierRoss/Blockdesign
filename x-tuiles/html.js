@@ -62,42 +62,24 @@ var xTuilesElement = {
                 width: 30px;
             }
             #hauteur, #largeur {
-                width: 30px;
+                width: 40px;
+                float: right;
                 border-radius: 5px;
             }
-            #conteneur-export {
+            #conteneur-final {
                 position: absolute;
                 right: 5px;
                 top: 8px;
                 width: 30px;
             }
-            #conteneur-final {
-                position: absolute;
-                right: 35px;
-                top: 8px;
-                width: 30px;
-            }
-            #conteneur-pdf {
-                position: absolute;
-                right: 65px;
-                top: 6px;
-                width: 30px;
-            }
             #conteneur-import {
                 position: absolute;
-                right: 95px;
+                right: 35px;
                 top: 6px;
                 width: 30px;
             }
             .fa-bars, .fa-arrows-v, .fa-arrows-h, .fa-download, .fa-upload, .fa-check, .fa-file-pdf-o {
               color: white;
-            }
-            #popup-menu {
-                position: absolute;
-                top: 0px;
-                left: 0px;
-                width: 100px;
-                height: 100px;
             }
             #conteneur {
                 position: absolute;
@@ -140,27 +122,27 @@ var xTuilesElement = {
         <div id="menu">
             <ul>
                 <li class="dropdown">
-                    <div style="width: 20px; margin: 0 auto;"><i class="fa fa-paint-brush"></i></div>
+                    <div style="width: 20px; margin: 0 auto;"><i class="fa fa-paint-brush" title="Statistiques sur l'utilisation des couleurs"></i></div>
                     <ul id="counter-container" class="dropdown-menu"></ul>
                 </li>
                 <li class="dropdown">
-                    <div style="width: 20px; margin: 0 auto;"><i class="fa fa-arrows-alt"></i></div>
+                    <div style="width: 20px; margin: 0 auto;"><i class="fa fa-arrows-alt" title="Taille de la cloture de travail"></i></div>
                     <ul id="counter-container" class="dropdown-menu">
                         <li style="height: 25px; padding: 5px;">
-                            <label for="hauteur"><i class="fa fa-arrows-v"></i></label>
+                            <label for="hauteur"><i class="fa fa-arrows-v" title="Hauteur"></i></label>
                             <input type="number" id="hauteur" value="2">
                         </li> 
                         <li style="height: 25px; padding: 5px;">
-                            <label for="largeur"><i class="fa fa-arrows-h"></i></label>
+                            <label for="largeur"><i class="fa fa-arrows-h" title="Largeur"></i></label>
                             <input type="number" id="largeur" value="13">
                         </li> 
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <div style="width: 20px; margin: 0 auto;"><i class="fa fa-floppy-o"></i></div>
+                    <div style="width: 20px; margin: 0 auto;"><i class="fa fa-floppy-o" title="Sauvegardes"></i></div>
                     <ul id="counter-container" class="dropdown-menu">
                         <li style="height: 25px; padding: 5px;">
-                            <i id="pdf" class="fa fa-file-pdf-o" style="float: left;"></i>
+                            <i id="pdf" class="fa fa-file-pdf-o" style="float: left;" title="Exportation en format SVG"></i>
                             <i id="export" class="fa fa-lg fa-download"></i>
                         </li> 
                     </ul>
@@ -169,8 +151,8 @@ var xTuilesElement = {
         </div>
         <div id="conteneur">
             <div id="header">
-                <div id="conteneur-menu"><i id="bouton-menu" class="fa fa-lg fa-bars"></i></div>
-                <div id="conteneur-import"><i id="import" class="fa fa-lg fa-upload"></i></div>
+                <div id="conteneur-menu"><i id="bouton-menu" class="fa fa-lg fa-bars" title="Afficher le menu"></i></div>
+                <div id="conteneur-import"><i id="import" class="fa fa-lg fa-upload" title="Charger un fichier"></i></div>
                 <div id="conteneur-final"><i id="final" class="fa fa-lg fa-check"></i></div>
             </div>
             <div id="canvas"></div>

@@ -6,6 +6,7 @@
  * Changer couleurs avec opacite pour valeur rgba
  * Enlever concept de traduction et de nom de couleur
  *
+ * Ajouter des tooltips sur les images
  */
 
 xTuilesElement.lifecycle = {
