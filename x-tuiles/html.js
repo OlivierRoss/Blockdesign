@@ -147,18 +147,23 @@ var xTuilesElement = {
                     <div style="width: 20px; margin: 0 auto;"><i class="fa fa-arrows-alt"></i></div>
                     <ul id="counter-container" class="dropdown-menu">
                         <li style="height: 25px; padding: 5px;">
-                            <label for="hauteur"><i class="fa fa-lg fa-arrows-v"></i></label>
+                            <label for="hauteur"><i class="fa fa-arrows-v"></i></label>
                             <input type="number" id="hauteur" value="2">
                         </li> 
                         <li style="height: 25px; padding: 5px;">
-                            <label for="largeur"><i class="fa fa-lg fa-arrows-h"></i></label>
+                            <label for="largeur"><i class="fa fa-arrows-h"></i></label>
                             <input type="number" id="largeur" value="13">
                         </li> 
                     </ul>
                 </li>
                 <li class="dropdown">
                     <div style="width: 20px; margin: 0 auto;"><i class="fa fa-floppy-o"></i></div>
-                    <ul id="counter-container" class="dropdown-menu"></ul>
+                    <ul id="counter-container" class="dropdown-menu">
+                        <li style="height: 25px; padding: 5px;">
+                            <i id="pdf" class="fa fa-file-pdf-o" style="float: left;"></i>
+                            <i id="export" class="fa fa-lg fa-download"></i>
+                        </li> 
+                    </ul>
                 </li>
             </ul>
         </div>
@@ -166,9 +171,7 @@ var xTuilesElement = {
             <div id="header">
                 <div id="conteneur-menu"><i id="bouton-menu" class="fa fa-lg fa-bars"></i></div>
                 <div id="conteneur-import"><i id="import" class="fa fa-lg fa-upload"></i></div>
-                <div id="conteneur-pdf"><i id="pdf" class="fa fa-lg fa-file-pdf-o"></i></div>
                 <div id="conteneur-final"><i id="final" class="fa fa-lg fa-check"></i></div>
-                <div id="conteneur-export"><i id="export" class="fa fa-lg fa-download"></i></div>
             </div>
             <div id="canvas"></div>
             <div id="footer"></div>
