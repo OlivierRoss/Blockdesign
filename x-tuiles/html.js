@@ -42,7 +42,7 @@ var xTuilesElement = {
             #canvas {
                 position:relative;
                 width: 100%;
-                height: 200px;
+                height: calc(100% - 60px);
             }
             #header {
                 position: relative;
@@ -114,6 +114,7 @@ var xTuilesElement = {
                 bottom: 0px;
                 width: 0px;
                 background-color: grey;
+                overflow: auto;
                 transition: left 1s ease;
             }
             .dropdown {

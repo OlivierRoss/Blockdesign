@@ -40,7 +40,7 @@ xTuilesElement.lifecycle = {
     inserted: function () {
         // Creation du canvas
         var canvas = this.canvas.node();
-        this.svg = this.canvas.append("svg").attr("height", canvas.offsetHeight).attr("width", "100%");
+        this.svg = this.canvas.append("svg").attr("id", "svg").attr("height", canvas.offsetHeight).attr("width", "100%");
 
         // Creation du choix de couleurs
         this.drawColorSamples();
@@ -64,6 +64,7 @@ xTuilesElement.lifecycle = {
         document.getElementById("final").onclick = this.finalExport.bind(this);
         document.getElementById("bouton-menu").onclick = this.toggleMenu.bind(this);
         document.getElementById("import").onclick = this.import.bind(this);
+        document.getElementById("pdf").onclick = this.pdf.bind(this);
         window.onresize = this.drawComponents.bind(this);
 
         // Finalisation

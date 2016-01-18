@@ -44,15 +44,10 @@ xTuilesElement.methods = {
         }
 
         document.getElementById("conteneur").style.left = document.getElementById("menu").style.width = this.menuHidden ? "100px": "0px" ;
-        window.setTimeout(this.drawComponents.bind(this), 100);
         window.setTimeout(this.drawComponents.bind(this), 200);
-        window.setTimeout(this.drawComponents.bind(this), 300);
         window.setTimeout(this.drawComponents.bind(this), 400);
-        window.setTimeout(this.drawComponents.bind(this), 500);
         window.setTimeout(this.drawComponents.bind(this), 600);
-        window.setTimeout(this.drawComponents.bind(this), 700);
         window.setTimeout(this.drawComponents.bind(this), 800);
-        window.setTimeout(this.drawComponents.bind(this), 900);
         window.setTimeout(this.drawComponents.bind(this), 1000);
         this.menuHidden = !this.menuHidden;
     },
@@ -284,10 +279,8 @@ xTuilesElement.methods = {
         sauvegarde.hauteur = this.hauteur.value;
         sauvegarde.largeur = this.largeur.value;
         sauvegarde.matrice = this.matrice;
-        //window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(sauvegarde))
-        var uriContent = "data:application/octet-stream," + encodeURIComponent(JSON.stringify(sauvegarde));
-        window.open(uriContent, 'neuesDokument');
-        //download('test.txt', 'Hello world!');
+        var blob = new Blob([JSON.stringify(sauvegarde)], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "sauvegardeCloture.txt");
     },
     finalExport: function () {
         window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(getSmallestMatrix(this.matrice)));
@@ -295,6 +288,9 @@ xTuilesElement.methods = {
     import: function () {
         var fichier = window.prompt("Copier le contenu du fichier", "");
         console.log(JSON.parse(fichier));
+    },
+    pdf: function () {
+        saveSvgAsPng(document.getElementById("svg"), "cloture");
     },
 
     // Element creation
