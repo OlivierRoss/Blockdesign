@@ -1,5 +1,7 @@
 /*
  * TODO
+ * http://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
+ * http://codepen.io/pedronauck/pen/fcaDw
  *
  * Changer couleurs avec opacite pour valeur rgba
  * Enlever concept de traduction et de nom de couleur
@@ -42,6 +44,7 @@ xTuilesElement.lifecycle = {
 
         // Creation du choix de couleurs
         this.drawColorSamples();
+        this.drawColorCounters();
         this.setSelectedColor(this.couleurs[Object.keys(this.couleurs)[0]].element); // Activer la premiere couleur (noir)
 
         // Construction matrice + affichage

@@ -15,13 +15,11 @@ xTuilesElement.methods = {
     },
     drawColorSamples: function () {
         var footer = document.getElementById("footer");
-        var menu = document.getElementById("menu");
-        footer.innerHTML = menu.innerHTML = "";
+        footer.innerHTML = "";
         var width = footer.offsetWidth / Object.keys(this.couleurs).length;
         var offset = 0;
         for (var c in this.couleurs) {
             var couleur = this.couleurs[c];
-            this.createCounter(couleur.code);
             this.createPickerSample(couleur, width, offset);
             offset += width;
         }
@@ -38,13 +36,11 @@ xTuilesElement.methods = {
         var conteneur = document.getElementById("conteneur");
         if(this.menuHidden){
             conteneur.style.left = this.menuWidth;
-            menu.style.width = this.menuWidth;
-            menu.style.opacity = 100;
+            menu.style.left = "0px";
         }
         else {
             conteneur.style.left = "0px";
-            menu.style.width = "0px";
-            menu.style.opacity = 0;
+            menu.style.left = "-" + this.menuWidth;
         }
 
         document.getElementById("conteneur").style.left = document.getElementById("menu").style.width = this.menuHidden ? "100px": "0px" ;
@@ -59,7 +55,6 @@ xTuilesElement.methods = {
         window.setTimeout(this.drawComponents.bind(this), 900);
         window.setTimeout(this.drawComponents.bind(this), 1000);
         this.menuHidden = !this.menuHidden;
-        //getSmallestMatrix(this.matrice);
     },
     changerCouleur: function (ev) {
         this.setSelectedColor(ev.currentTarget);
@@ -304,11 +299,11 @@ xTuilesElement.methods = {
 
     // Element creation
     createCounter: function (color) {
-       var div = document.createElement("div"); 
-       div.id = color + "-counter-container";
-       div.setAttribute("class", "counter-container");
-       div.innerHTML = '<div id="' + color + '-sample" class="sample" style="background-color: ' + color + '"></div><div id="' + color + '-counter" class="counter"></div>'
-       document.getElementById("menu").appendChild(div);
+       var li = document.createElement("li"); 
+       li.id = color + "-counter-container";
+       li.setAttribute("class", "counter-container");
+       li.innerHTML = '<div id="' + color + '-sample" class="sample" style="background-color: ' + color + '"></div><div id="' + color + '-counter" class="counter"></div>'
+       document.getElementById("counter-container").appendChild(li);
     },
     createPickerSample: function (color, width, offset) {
         var div = document.createElement("div");
