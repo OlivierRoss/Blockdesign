@@ -209,7 +209,7 @@ xTuilesElement.methods = {
     setSelectedColor: function (element) {
         var nodes = document.querySelectorAll(".container-echantillon.selected");
         for(var i = 0; i < nodes.length; ++i){
-            nodes[i].className = "echantillon";
+            nodes[i].className = "container-echantillon";
         }
         element.className += " selected";
         this.couleur = element.id;
