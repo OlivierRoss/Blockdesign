@@ -139,23 +139,32 @@ var xTuilesElement = {
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <div style="width: 20px; margin: 0 auto;"><i class="fa fa-floppy-o" title="Sauvegardes"></i></div>
+                    <div style="width: 20px; margin: 0 auto;"><i class="fa fa-floppy-o" title="Sauvegardes et chargement"></i></div>
                     <ul id="counter-container" class="dropdown-menu">
                         <li style="height: 25px; padding: 5px;">
                             <i id="pdf" class="fa fa-file-pdf-o" style="float: left;" title="Exportation en format SVG"></i>
                             <i id="export" class="fa fa-lg fa-download"></i>
+                            <i id="import" class="fa fa-lg fa-upload" title="Charger un fichier"></i>
                         </li> 
                     </ul>
                 </li>
+                <li class="dropdown">
+                    <div id="open-file-upload" style="width: 20px; margin: 0 auto;"><i class="fa fa-camera" title="Image d'arriere-plan"></i></div>
+                    <ul id="counter-container" class="dropdown-menu">
+                        <li style="height: 25px; padding: 5px;">
+                            <input id="background-image" type="file" style="display: none;">
+                        </li> 
+                    </ul>
+                </li>
+
             </ul>
         </div>
         <div id="conteneur">
             <div id="header">
                 <div id="conteneur-menu"><i id="bouton-menu" class="fa fa-lg fa-bars" title="Afficher le menu"></i></div>
-                <div id="conteneur-import"><i id="import" class="fa fa-lg fa-upload" title="Charger un fichier"></i></div>
                 <div id="conteneur-final"><i id="final" class="fa fa-lg fa-check"></i></div>
             </div>
-            <div id="canvas"></div>
+            <div id="canvas" style="background-size: 100% 100%;"></div>
             <div id="footer"></div>
         </div>
     */

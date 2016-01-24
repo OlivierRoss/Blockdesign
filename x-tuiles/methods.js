@@ -1,4 +1,10 @@
 xTuilesElement.methods = {
+    updateBackgroundImage: function () {
+        readURL(document.getElementById("background-image").files[0]);
+    },
+    openFileUpload: function () {
+        document.getElementById("background-image").click();
+    },
     writeExtraitMatrice: function (x, y, matrice) {
         var me = this;
         matrice.forEach(function (line, indexLigne) {

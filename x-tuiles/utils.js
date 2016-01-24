@@ -52,3 +52,11 @@ function download(filename, text) {
         pom.click();
     }
 }
+
+function readURL(file, callback){
+    var reader = new FileReader();
+    reader.onloadend = function(){
+        document.getElementById('canvas').style.backgroundImage = "url(" + reader.result + ")";        
+    }
+    reader.readAsDataURL(file);
+}

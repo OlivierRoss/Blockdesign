@@ -66,6 +66,8 @@ xTuilesElement.lifecycle = {
         document.getElementById("bouton-menu").onclick = this.toggleMenu.bind(this);
         document.getElementById("import").onclick = this.import.bind(this);
         document.getElementById("pdf").onclick = this.pdf.bind(this);
+        document.getElementById("open-file-upload").onclick = this.openFileUpload.bind(this);
+        document.getElementById("background-image").onchange = this.updateBackgroundImage.bind(this);
         window.onresize = this.drawComponents.bind(this);
 
         // Finalisation
