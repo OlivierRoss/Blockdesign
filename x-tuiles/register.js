@@ -43,9 +43,16 @@ xTuilesElement.lifecycle = {
         var canvas = this.canvas.node();
         this.svg = this.canvas.append("svg").attr("id", "svg").attr("height", canvas.offsetHeight).attr("width", "100%");
 
-        // Creation du choix de couleurs
-        this.drawColorSamples();
-        this.drawColorCounters();
+        ///// Couleurs
+        // Echantillons footer
+        var widthFooterColorSample = 100.0 / Object.keys(this.couleurs).length;
+        for (var c in this.couleurs) {
+            this.createPickerSample(this.couleurs[c], widthFooterColorSample);
+        }
+        // Compteurs de couleurs
+        for(var c in this.couleurs) {
+            this.createColorCounter(this.couleurs[c].code);
+        }
         this.setSelectedColor(this.couleurs[Object.keys(this.couleurs)[0]].element); // Activer la premiere couleur (noir)
 
         // Construction matrice + affichage
@@ -64,9 +71,9 @@ xTuilesElement.lifecycle = {
         document.getElementById("export").onclick = this.export.bind(this);
         document.getElementById("final").onclick = this.finalExport.bind(this);
         document.getElementById("bouton-menu").onclick = this.toggleMenu.bind(this);
-        document.getElementById("import").onclick = this.import.bind(this);
+        document.getElementById("open").onclick = function () { document.getElementById("upload-file").click() };
         document.getElementById("pdf").onclick = this.pdf.bind(this);
-        document.getElementById("open-background-upload").onclick = this.openBackgroundUpload.bind(this);
+        document.getElementById("open-background-upload").onclick = function () { document.getElementById("background-image").click() };
         document.getElementById("background-image").onchange = this.updateBackgroundImage.bind(this);
         document.getElementById("upload-file").onchange = this.loadFile.bind(this);
         window.onresize = this.drawComponents.bind(this);

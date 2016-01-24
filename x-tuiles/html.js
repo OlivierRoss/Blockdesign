@@ -27,11 +27,16 @@ var xTuilesElement = {
             .container-echantillon:hover, .selected {
                 background-color: white;
             }
+            .container-echantillon {
+                position: relative;
+                float: left;
+                height: 100%;
+            }
             .echantillon {
                 position: absolute;
-                top: 3px;
+                top: 5px;
                 left: 5px;
-                bottom: 3px;
+                bottom: 5px;
                 right: 5px;
             }
             .compteur {
@@ -72,12 +77,6 @@ var xTuilesElement = {
                 top: 8px;
                 width: 30px;
             }
-            #conteneur-import {
-                position: absolute;
-                right: 35px;
-                top: 6px;
-                width: 30px;
-            }
             .fa-bars, .fa-arrows-v, .fa-arrows-h, .fa-download, .fa-upload, .fa-check, .fa-file-pdf-o {
               color: white;
             }
@@ -110,9 +109,6 @@ var xTuilesElement = {
                 text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
                 padding: 10px;
             }
-            .dropdown [data-toggle="dropdown"]:hover {
-                  background: #2c89c6;
-            }
             ul {
                 padding: 0px;
                 margin: 0px;
@@ -143,8 +139,8 @@ var xTuilesElement = {
                     <ul id="counter-container" class="dropdown-menu">
                         <li style="height: 25px; padding: 5px;">
                             <i id="pdf" class="fa fa-file-pdf-o" style="float: left;" title="Exportation en format SVG"></i>
-                            <i id="export" class="fa fa-lg fa-download"></i>
-                            <i id="import" class="fa fa-lg fa-upload" title="Charger un fichier"></i>
+                            <i id="export" class="fa fa-lg fa-download" title="Enregistrer"></i>
+                            <i id="open" class="fa fa-lg fa-upload" title="Ouvrir"></i>
                             <input id="upload-file" type="file" style="display: none;">
                         </li> 
                     </ul>

@@ -53,10 +53,10 @@ function download(filename, text) {
     }
 }
 
-function readURL(file, callback){
+function readUrlAsData(file, callback){
     var reader = new FileReader();
     reader.onloadend = function(){
-        document.getElementById('canvas').style.backgroundImage = "url(" + reader.result + ")";        
+        callback(reader.result);
     }
     reader.readAsDataURL(file);
 }
@@ -68,3 +68,16 @@ function readUrlAsText(file, callback){
     }
     reader.readAsText(file);
 }
+
+function side2Diagonal (cote) {
+    return Math.sqrt(Math.pow(cote, 2) * 2)
+}
+
+function diagonal2Side (diagonale) {
+    return Math.sqrt(Math.pow(diagonale, 2) / 2)
+}
+
+function deepCopy (obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+

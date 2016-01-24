@@ -1,20 +1,8 @@
 xTuilesElement.methods = {
     updateBackgroundImage: function () {
-        readURL(document.getElementById("background-image").files[0]);
-    },
-    openBackgroundUpload: function () {
-        document.getElementById("background-image").click();
-    },
-    openFileUpload: function () {
-        document.getElementById("upload-file").click();
-    },
-    loadFile: function () {
-        readUrlAsText(document.getElementById("upload-file").files[0], function (text) { 
-            console.log(JSON.parse(text));
+        readUrlAsData(document.getElementById("background-image").files[0], function (file) {
+            document.getElementById('canvas').style.backgroundImage = "url(" + file + ")";        
         });
-    },
-    loadConfiguration: function (config) {
-        // Load matrix to memory and print
     },
     writeExtraitMatrice: function (x, y, matrice) {
         var me = this;
@@ -25,28 +13,11 @@ xTuilesElement.methods = {
         });
         this.dessiner();
     },
-    drawColorCounters: function () { // Nest pas appelee
-        for(var c in this.couleurs){
-            this.createCounter(this.couleurs[c].code);
-        }
-    },
-    drawColorSamples: function () {
-        var footer = document.getElementById("footer");
-        footer.innerHTML = "";
-        var width = footer.offsetWidth / Object.keys(this.couleurs).length;
-        var offset = 0;
-        for (var c in this.couleurs) {
-            var couleur = this.couleurs[c];
-            this.createPickerSample(couleur, width, offset);
-            offset += width;
-        }
-    },
     drawComponents: function () {
         var svg = this.svg.node();
         var canvas = this.canvas.node();
         svg.offsetWidth = canvas.offsetWidth;
         this.dessiner();
-        this.drawColorSamples();
     },
     toggleMenu: function () {
         var menu = document.getElementById("menu");
@@ -61,35 +32,8 @@ xTuilesElement.methods = {
         }
 
         document.getElementById("conteneur").style.left = document.getElementById("menu").style.width = this.menuHidden ? "100px": "0px" ;
-        window.setTimeout(this.drawComponents.bind(this), 200);
-        window.setTimeout(this.drawComponents.bind(this), 400);
-        window.setTimeout(this.drawComponents.bind(this), 600);
-        window.setTimeout(this.drawComponents.bind(this), 800);
-        window.setTimeout(this.drawComponents.bind(this), 1000);
+        for(var i = 200; i < 1000; i+= 200) window.setTimeout(this.drawComponents.bind(this), i);
         this.menuHidden = !this.menuHidden;
-    },
-    changerCouleur: function (ev) {
-        this.setSelectedColor(ev.currentTarget);
-    },
-    setSelectedColor: function (element) {
-        var nodes = document.querySelectorAll(".container-echantillon.selected");
-        for(var i = 0; i < nodes.length; ++i){
-            nodes[i].className = "echantillon";
-        }
-        element.className += " selected";
-        this.couleur = element.id;
-    },
-    ajouterCouleurs: function (couleurs) {
-        var me = this;
-        couleurs.forEach(function (couleur) {
-            me.couleurs[couleur.code] = {
-                compte: 0,
-                handicap: 0,
-                nom: couleur.nom,
-                code: couleur.code,
-                traduction: {}
-            }
-        });
     },
     calculerMetriques: function () {
         // Constantes
@@ -99,11 +43,11 @@ xTuilesElement.methods = {
         // Calcul de cote
         var canvas = this.canvas.node();
         this.diagonale = Math.min((canvas.offsetWidth - 2) / this.nbcarresligne, (canvas.offsetHeight - 2) / ((this.nblignes / 2) + 0.5));
-        this.cote = this.diagonaleacote(this.diagonale);
+        this.cote = diagonal2Side(this.diagonale);
         this.decalageRotation = (this.diagonale - this.cote) / 2;
     },
     creationmatriceaffichage: function () {
-        this.lignes = this.deepcopy(this.matrice);
+        this.lignes = deepCopy(this.matrice);
         this.resetHandicap();
         this.ajusterlignes();
         this.ajustercolonnes();
@@ -179,12 +123,12 @@ xTuilesElement.methods = {
             var me = this;
             this.lignes.forEach(function (element) {
                 for(var i = 0; i < nb; ++i){
-                    element.push(me.deepcopy(me.elementBase)); 
+                    element.push(deepCopy(me.elementBase)); 
                 }
             });
             this.matrice.forEach(function (element) {
                 for(var i = 0; i < nb; ++i){
-                    element.push(me.deepcopy(me.elementBase)); 
+                    element.push(deepCopy(me.elementBase)); 
                 }
             });
         }
@@ -192,7 +136,7 @@ xTuilesElement.methods = {
     creerligne: function (nb) {
         var ligne = [];
         for(var i = 0; i < nb; ++i) {
-            ligne.push(this.deepcopy(this.elementBase));
+            ligne.push(deepCopy(this.elementBase));
         }
         return ligne;
     },
@@ -229,14 +173,65 @@ xTuilesElement.methods = {
         .on("mousedown", function () { me.changecolor.call(this, me)} )
         .on("mouseover", function () { if(me.sourisenfoncee) me.changecolor.call(this, me)});
     },
+
+
+    ///// Sauvegarde + enregistrement /////
+    export: function () {
+        var sauvegarde = {};
+        sauvegarde.couleurs = this.couleurs;
+        sauvegarde.matrice = this.matrice;
+        var blob = new Blob([JSON.stringify(sauvegarde)], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, window.prompt("Nom du fichier: ") + ".txt");
+    },
+    finalExport: function () {
+        window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(getSmallestMatrix(this.matrice)));
+    },
+    pdf: function () {
+        saveSvgAsPng(document.getElementById("svg"), "cloture");
+    },
+    loadFile: function () {
+        var me = this;
+        readUrlAsText(document.getElementById("upload-file").files[0], function (text) { 
+            me.loadConfiguration(JSON.parse(text));
+            console.log(JSON.parse(text));
+        });
+    },
+    loadConfiguration: function (config) {
+        this.matrice = config.matrice;
+        this.dessiner();
+    },
+    //--- Sauvegarde + enregistrement ---//
+
+    ///// Couleurs /////
+    changerCouleur: function (ev) {
+        this.setSelectedColor(ev.currentTarget);
+    },
+    setSelectedColor: function (element) {
+        var nodes = document.querySelectorAll(".container-echantillon.selected");
+        for(var i = 0; i < nodes.length; ++i){
+            nodes[i].className = "echantillon";
+        }
+        element.className += " selected";
+        this.couleur = element.id;
+    },
+    ajouterCouleurs: function (couleurs) {
+        var me = this;
+        couleurs.forEach(function (couleur) {
+            me.couleurs[couleur.code] = {
+                compte: 0,
+                handicap: 0,
+                nom: couleur.nom,
+                code: couleur.code,
+                traduction: {}
+            }
+        });
+    },
+
     afficherDecompte: function () {
         var decompte = "";
         for(var c in this.couleurs){
             var couleur = this.couleurs[c];
             document.getElementById(couleur.code + "-counter").innerHTML = couleur.compte - couleur.handicap;
-            //if(couleur.compte - couleur.handicap > 0) {
-            //    decompte += c + " : " + (couleur.compte - couleur.handicap) + "\n"; 
-            // }
         }
     },
     changecolor: function (me) {
@@ -280,52 +275,23 @@ xTuilesElement.methods = {
     getCouleur: function () {
         return {fill: this.couleur, opacity: d3.event.altKey ? 0 : 1}; // Si transparence, voir
     },
-    coteadiagonale: function (cote) {
-        return Math.sqrt(Math.pow(cote, 2) * 2)
+    createColorCounter: function (color) {
+        var li = document.createElement("li"); 
+        li.id = color + "-counter-container";
+        li.setAttribute("class", "counter-container");
+        li.innerHTML = '<div id="' + color + '-sample" class="sample" style="background-color: ' + color + '"></div><div id="' + color + '-counter" class="counter"></div>'
+        document.getElementById("counter-container").appendChild(li);
     },
-    diagonaleacote: function (diagonale) {
-        return Math.sqrt(Math.pow(diagonale, 2) / 2)
-    },
-    deepcopy: function (obj) {
-        return JSON.parse(JSON.stringify(obj));
-    },
-
-    // Events
-    export: function () {
-        var sauvegarde = {};
-        sauvegarde.hauteur = this.hauteur.value;
-        sauvegarde.largeur = this.largeur.value;
-        sauvegarde.matrice = this.matrice;
-        var blob = new Blob([JSON.stringify(sauvegarde)], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, "sauvegardeCloture.txt");
-    },
-    finalExport: function () {
-        window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(getSmallestMatrix(this.matrice)));
-    },
-    import: function () {
-        document.getElementById("upload-file").click();
-    },
-    pdf: function () {
-        saveSvgAsPng(document.getElementById("svg"), "cloture");
-    },
-
-    // Element creation
-    createCounter: function (color) {
-       var li = document.createElement("li"); 
-       li.id = color + "-counter-container";
-       li.setAttribute("class", "counter-container");
-       li.innerHTML = '<div id="' + color + '-sample" class="sample" style="background-color: ' + color + '"></div><div id="' + color + '-counter" class="counter"></div>'
-       document.getElementById("counter-container").appendChild(li);
-    },
-    createPickerSample: function (color, width, offset) {
+    createPickerSample: function (color, width) {
         var div = document.createElement("div");
         div.id = color.code;
         div.setAttribute("class", "container-echantillon");
-        div.setAttribute("style", "position: absolute; top: 5px; bottom: 5px; left: " + offset + "px; width:" + width + "px;");
+        div.setAttribute("style", "width:" + width + "%;");
         div.innerHTML = '<div class="echantillon" style="background-color: ' + color.code + ';"></div>';
         div.onclick = this.changerCouleur.bind(this);
         document.getElementById("footer").appendChild(div);
         color.element = div;
     }
+    //--- Couleurs ---//
 }
 
