@@ -2,8 +2,19 @@ xTuilesElement.methods = {
     updateBackgroundImage: function () {
         readURL(document.getElementById("background-image").files[0]);
     },
-    openFileUpload: function () {
+    openBackgroundUpload: function () {
         document.getElementById("background-image").click();
+    },
+    openFileUpload: function () {
+        document.getElementById("upload-file").click();
+    },
+    loadFile: function () {
+        readUrlAsText(document.getElementById("upload-file").files[0], function (text) { 
+            console.log(JSON.parse(text));
+        });
+    },
+    loadConfiguration: function (config) {
+        // Load matrix to memory and print
     },
     writeExtraitMatrice: function (x, y, matrice) {
         var me = this;
@@ -292,8 +303,7 @@ xTuilesElement.methods = {
         window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(getSmallestMatrix(this.matrice)));
     },
     import: function () {
-        var fichier = window.prompt("Copier le contenu du fichier", "");
-        console.log(JSON.parse(fichier));
+        document.getElementById("upload-file").click();
     },
     pdf: function () {
         saveSvgAsPng(document.getElementById("svg"), "cloture");

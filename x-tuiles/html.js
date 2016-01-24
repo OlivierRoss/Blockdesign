@@ -145,11 +145,12 @@ var xTuilesElement = {
                             <i id="pdf" class="fa fa-file-pdf-o" style="float: left;" title="Exportation en format SVG"></i>
                             <i id="export" class="fa fa-lg fa-download"></i>
                             <i id="import" class="fa fa-lg fa-upload" title="Charger un fichier"></i>
+                            <input id="upload-file" type="file" style="display: none;">
                         </li> 
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <div id="open-file-upload" style="width: 20px; margin: 0 auto;"><i class="fa fa-camera" title="Image d'arriere-plan"></i></div>
+                    <div id="open-background-upload" style="width: 20px; margin: 0 auto;"><i class="fa fa-camera" title="Image d'arriere-plan"></i></div>
                     <ul id="counter-container" class="dropdown-menu">
                         <li style="height: 25px; padding: 5px;">
                             <input id="background-image" type="file" style="display: none;">
