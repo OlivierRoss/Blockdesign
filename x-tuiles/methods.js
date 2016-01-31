@@ -4,7 +4,7 @@ xTuilesElement.methods = {
             document.getElementById('canvas').style.backgroundImage = "url(" + file + ")";        
         });
     },
-    writeExtraitMatrice: function (x, y, matrice) {
+    writeExtraitMatrice: function (x, y, matrice) { // Pour ecrire lettres
         var me = this;
         matrice.forEach(function (line, indexLigne) {
             line.forEach(function (tuile, indexColonne) {
@@ -198,6 +198,7 @@ xTuilesElement.methods = {
     },
     loadConfiguration: function (config) {
         this.matrice = config.matrice;
+        this.couleurs = config.couleurs;
         this.dessiner();
     },
     //--- Sauvegarde + enregistrement ---//
