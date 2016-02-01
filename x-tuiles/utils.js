@@ -16,8 +16,8 @@ function getSmallestMatrix (matrix) {
 
 function getMatrixExtract (x1, y1, x2, y2, matrix) {
     var extract = [];
-    matrix.slice(y1, y2+1).forEach(function (el){
-        extract.push(el.slice(x1, x2+1))            
+    matrix.slice(y1, y2+1).forEach(function (el, i){
+        extract.push(el.slice(x1, i % 2 == 0 ? x2 + 1 : x2))            
     });
     return extract;
 }
@@ -82,62 +82,60 @@ function deepCopy (obj) {
 }
 
 function Matrix (config) {
+    var me = this;
+
     if (config) {
         //this.apply(config);
     }
     else {
-        this.nextLineFull = true;
         this.baseElement = {fill: "#000000", opacity: 0};
-        this.matrix = [[]];
+        this.matrix = [[{fill: "#000000", opacity: 0}]];
     }
 
     // Private functions
     function createRow (number) {
         var line = [];
-        for(var i = 0; i < nb; ++i) line.push(deepCopy(this.baseElement));
+        for(var i = 0; i < number; ++i) line.push(deepCopy(me.baseElement));
         return line;
     }
 
     function addRows (number) {
-        for(var i = 0; i < number; ++i){
-            this.matrix.push(createRow(this.nextLineFull ? this.matrix[0].length : this.matrix[0].length - 1));
-            this.nextLineFull = !this.nextLineFull;
-        }
+        for(var i = 0; i < number; ++i) me.matrix.push(createRow(me.matrix.length % 2 == 0 ? me.matrix[0].length : me.matrix[0].length - 1));
     }
 
     function addColumns (number) {
-        var me = this;
-        this.matrix.forEach(function (line) {
+        me.matrix.forEach(function (line) {
             for(var i = 0; i < number; ++i) line.push(deepCopy(me.baseElement));
         });
     }
 
     // Public object
     var public_members = {
-        resize: function (rows, columns) {
-            if(columns > this.matrix[0].length) { // Important que les colonnes soient en premier pour ne pas ajouter des colonnes vides
-                addColumns(rows - this.matrix[0].length);
+        extract: function (rows, columns) {
+            if(rows > me.matrix.length) {
+                addRows(rows - me.matrix.length);
             }
-            if(rows > this.matrix.length) {
-                addRows(rows - this.matrix.length);
+            if(columns > me.matrix[0].length) { // Important que les colonnes soient en premier pour ne pas ajouter des colonnes vides
+                addColumns(columns - me.matrix[0].length);
             }
-        }
-
-        updateCell: function (cell, opacity, color) {
-            if(cell instanceof HTMLElement) {
-                cell.attr("fill", color);
-                cell.attr("fill-opacity", opacity);
+            return getMatrixExtract(0, 0, columns - 1, rows - 1, me.matrix);
+        },
+        updateCell: function (cell, color, opacity) {
+            var cell = this.get(cell);
+            cell.color = color;
+            cell.opacity = opacity;
+        },
+        get: function (cell) {
+            if(cell instanceof SVGElement) {
+                return me.matrix[cell.parentNode.getAttribute("index")][cell.getAttribute("index")];
             }
             else if(cell.hasOwnProperty("x") && cell.hasOwnProperty("y")) {
-                var _cell = this.matrix[cell.y][cell.x];
-                _cell.attr("fill", color);
-                _cell.attr("fill-opacity", opacity);
+                return me.matrix[cell.y][cell.x];
             }
             else {
-                throw "Invalid cell";
+                throw "Invalid cell format";
             }
         }
     };
-
     return public_members;
 }

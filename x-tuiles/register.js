@@ -11,10 +11,7 @@ xTuilesElement.lifecycle = {
     created: function () {
         // Variables globales
         this.carresparpied = 4;
-        this.lignes = [];
-        this.matrice = [];
         this.sourisenfoncee = false;
-        this.elementBase = {fill: "#000000", opacity: 0};
         this.couleurs = {};
         this.couleur = null;
         this.ajouterCouleurs([{nom: "noir", code: "#000000"},
@@ -30,6 +27,7 @@ xTuilesElement.lifecycle = {
                               {nom: "bleu fonce", code: "#002855"}]);
         this.menuHidden = true;
         this.menuWidth = "150px";
+        this.matrix = new Matrix();
         
         // Composants
         this.hauteur = d3.select("#hauteur").node();
@@ -53,14 +51,6 @@ xTuilesElement.lifecycle = {
         }
         this.setSelectedColor(this.couleurs[Object.keys(this.couleurs)[0]].element); // Activer la premiere couleur (noir)
 
-        // Construction matrice + affichage
-        this.calculerMetriques();
-        for(var i = 0; i < this.nblignes; ++i)
-        {
-            var nbcarres = i % 2 === 0 ? this.nbcarresligne : this.nbcarresligne - 1;
-            this.matrice.push(this.creerligne(nbcarres));
-        }
-
         // Evenements
         this.hauteur.onchange = this.dessiner.bind(this);
         this.largeur.onchange = this.dessiner.bind(this);
@@ -77,8 +67,7 @@ xTuilesElement.lifecycle = {
         window.onresize = this.drawComponents.bind(this);
 
         // Finalisation
-        this.creationmatriceaffichage();
-        this.afficher();
+        this.dessiner();
     }
 };
 

@@ -46,15 +46,10 @@ xTuilesElement.methods = {
         this.cote = diagonal2Side(this.diagonale);
         this.decalageRotation = (this.diagonale - this.cote) / 2;
     },
-    creationmatriceaffichage: function () {
-        this.lignes = deepCopy(this.matrice);
-        this.resetHandicap();
-        this.ajusterlignes();
-        this.ajustercolonnes();
-    },
     dessiner: function () {
         this.calculerMetriques();
-        this.creationmatriceaffichage();
+        this.lignes = this.matrix.extract(this.nblignes, this.nbcarresligne);
+        //this.resetHandicap();
         this.nettoyer();
         this.afficher();
         this.afficherDecompte();
@@ -66,79 +61,6 @@ xTuilesElement.methods = {
         for(var c in this.couleurs){
             this.couleurs[c].handicap = 0;
         }
-    },
-    ajusterlignes: function () {
-        var voulu = this.nblignes;
-        var actuel = this.lignes.length;
-        if(voulu === actuel) { return; }
-        else if(voulu < actuel) { // il y en a trop
-            var nb = actuel - voulu;
-            var supprimes = this.lignes.splice(-nb, nb);
-
-            // Calculer handicap pour lignes
-            var me = this;
-            supprimes.forEach(function (ligne) {
-                ligne.forEach(function (element) {
-                    if(element.opacity) {
-                        me.couleurs[element.fill].handicap += 1;
-                    }
-                });
-            });
-        }
-        else { // il en manque
-            var nb = voulu - actuel;
-            var nbcarres = this.matrice[0].length;
-            var i = 0;
-            if(this.matrice[this.matrice.length-1].length == nbcarres){ // If its not the first time HACK
-                ++i;
-                ++nb;
-            }
-            for(; i < nb; ++i) {
-                var nouveauCarres = this.creerligne(i % 2 == 0 ? nbcarres : nbcarres - 1);
-                this.lignes.push(nouveauCarres);
-                this.matrice.push(nouveauCarres);
-            }
-        }
-    },
-    ajustercolonnes: function () {
-        var voulu = this.nbcarresligne;
-        var actuel = this.matrice[0].length;
-        if(voulu === actuel) { return; }
-        else if (voulu < actuel) { // il y en a trop
-            var me = this;
-            var nb = actuel - voulu;
-            this.lignes.forEach(function (element) {
-                var supprimes = element.splice(-nb, nb); 
-
-                // Calculer handicap
-                supprimes.forEach(function (element) {
-                    if(element.opacity) {
-                        me.couleurs[element.fill].handicap += 1;
-                    }
-                });
-            })
-        }
-        else { // il ny en a pas assez
-            var nb = voulu - actuel;
-            var me = this;
-            this.lignes.forEach(function (element) {
-                for(var i = 0; i < nb; ++i){
-                    element.push(deepCopy(me.elementBase)); 
-                }
-            });
-            this.matrice.forEach(function (element) {
-                for(var i = 0; i < nb; ++i){
-                    element.push(deepCopy(me.elementBase)); 
-                }
-            });
-        }
-    },
-    creerligne: function (nb) {
-        var ligne = [];
-        for(var i = 0; i < nb; ++i) {
-            ligne.push(deepCopy(this.elementBase));
-        }
-        return ligne;
     },
     afficher: function () {
         var me = this;
@@ -237,44 +159,31 @@ xTuilesElement.methods = {
     },
     changecolor: function (me) {
         var element = d3.select(this);
-        var elementNode = element.node();
-        var datum = me.matrice[elementNode.parentNode.getAttribute("index")][elementNode.getAttribute("index")];
         var couleur = me.getCouleur.call(me);
+        var datum = me.matrix.get(element.node());
 
         if(datum.opacity == 0 && couleur.opacity == 0) return; // pas de changement
         else if(datum.opacity == 0 && couleur.opacity != 0){ // nouvelle case
-            datum.fill = couleur.fill;
-            datum.opacity = couleur.opacity;
-
-            element.attr("fill", datum.fill);
-            element.attr("fill-opacity", datum.opacity);
-
-            ++me.couleurs[datum.fill].compte;
+            element.attr("fill", couleur.fill);
+            element.attr("fill-opacity", couleur.opacity);
+            ++me.couleurs[couleur.fill].compte;
         }
         else if(datum.opacity != 0 && couleur.opacity == 0){ // efface
-            --me.couleurs[datum.fill].compte;
-
-            datum.fill = couleur.fill;
-            datum.opacity = couleur.opacity;
-
-            element.attr("fill", datum.fill);
-            element.attr("fill-opacity", datum.opacity);
+            --me.couleurs[couleur.fill].compte;
+            element.attr("fill", couleur.fill);
+            element.attr("fill-opacity", couleur.opacity);
         }
         else { // changement couleur
-            --me.couleurs[datum.fill].compte;
-
-            datum.fill = couleur.fill;
-            datum.opacity = couleur.opacity;
-
+            --me.couleurs[couleur.fill].compte;
             element.attr("fill", datum.fill);
             element.attr("fill-opacity", datum.opacity);
-
-            ++me.couleurs[datum.fill].compte;
+            ++me.couleurs[couleur.fill].compte;
         }
+        me.matrix.updateCell(element.node(), couleur.fill, couleur.opacity);
         me.afficherDecompte();
     },
     getCouleur: function () {
-        return {fill: this.couleur, opacity: d3.event.altKey ? 0 : 1}; // Si transparence, voir
+        return {fill: this.couleur, opacity: d3.event.altKey ? 0 : 1};
     },
     createColorCounter: function (color) {
         var li = document.createElement("li"); 
