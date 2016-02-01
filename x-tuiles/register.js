@@ -1,12 +1,8 @@
 /*
- * TODO
  * http://codepen.io/pedronauck/pen/fcaDw
- *
  * Changer couleurs avec opacite pour valeur rgba
  * Enlever concept de traduction et de nom de couleur
- *
  */
-
 xTuilesElement.lifecycle = {
     created: function () {
         // Variables globales
@@ -57,7 +53,6 @@ xTuilesElement.lifecycle = {
         this.canvas.node().onmousedown = function () { this.sourisenfoncee = true }.bind(this);
         this.canvas.node().onmouseup = function () { this.sourisenfoncee = false }.bind(this);
         document.getElementById("export").onclick = this.export.bind(this);
-        document.getElementById("final").onclick = this.finalExport.bind(this);
         document.getElementById("bouton-menu").onclick = this.toggleMenu.bind(this);
         document.getElementById("open").onclick = function () { document.getElementById("upload-file").click() };
         document.getElementById("pdf").onclick = this.pdf.bind(this);

@@ -99,28 +99,23 @@ xTuilesElement.methods = {
 
     ///// Sauvegarde + enregistrement /////
     export: function () {
-        var sauvegarde = {};
-        sauvegarde.couleurs = this.couleurs;
-        sauvegarde.matrice = this.matrice;
-        var blob = new Blob([JSON.stringify(sauvegarde)], {type: "text/plain;charset=utf-8"});
+        var blob = new Blob([JSON.stringify(this.matrix.getMatrix())], {type: "text/plain;charset=utf-8"});
         saveAs(blob, window.prompt("Nom du fichier: ") + ".txt");
     },
-    finalExport: function () {
-        window.prompt("Copier dans le presse-papier avec CTRL-C et sauvegardez dans un document sur votre bureau", JSON.stringify(getSmallestMatrix(this.matrice)));
-    },
     pdf: function () {
+        // getSmallest
+        // afficher(smallest)
+        // saveSvgAsPng
         saveSvgAsPng(document.getElementById("svg"), "cloture");
     },
     loadFile: function () {
         var me = this;
         readUrlAsText(document.getElementById("upload-file").files[0], function (text) { 
             me.loadConfiguration(JSON.parse(text));
-            console.log(JSON.parse(text));
         });
     },
-    loadConfiguration: function (config) {
-        this.matrice = config.matrice;
-        this.couleurs = config.couleurs;
+    loadConfiguration: function (matrix) {
+        this.matrix = new Matrix(matrix);
         this.dessiner();
     },
     //--- Sauvegarde + enregistrement ---//

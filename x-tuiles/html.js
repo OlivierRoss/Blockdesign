@@ -159,7 +159,6 @@ var xTuilesElement = {
         <div id="conteneur">
             <div id="header">
                 <div id="conteneur-menu"><i id="bouton-menu" class="fa fa-lg fa-bars" title="Afficher le menu"></i></div>
-                <div id="conteneur-final"><i id="final" class="fa fa-lg fa-check"></i></div>
             </div>
             <div id="canvas" style="background-size: 100% 100%;"></div>
             <div id="footer"></div>

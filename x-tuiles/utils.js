@@ -81,16 +81,10 @@ function deepCopy (obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 
-function Matrix (config) {
+function Matrix (matrix) {
     var me = this;
-
-    if (config) {
-        //this.apply(config);
-    }
-    else {
-        this.baseElement = {fill: "#000000", opacity: 0};
-        this.matrix = [[{fill: "#000000", opacity: 0}]];
-    }
+    this.baseElement = {fill: "#000000", opacity: 0};
+    this.matrix = matrix || [[{fill: "#000000", opacity: 0}]];
 
     // Private functions
     function createRow (number) {
@@ -135,6 +129,9 @@ function Matrix (config) {
             else {
                 throw "Invalid cell format";
             }
+        },
+        getMatrix: function () {
+            return me.matrix;
         }
     };
     return public_members;
