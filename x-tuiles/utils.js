@@ -1,4 +1,4 @@
-function getSmallestMatrix (matrix) {
+function getSmallestRectangleCoordinates (matrix) {
     var rows = []; 
     var columns = [];
     matrix.forEach(function (row, rowIndex) {
@@ -11,7 +11,12 @@ function getSmallestMatrix (matrix) {
         });
         if(rowUsed) rows.push(rowIndex);
     });
-    return getMatrixExtract(arrayMin(columns), arrayMin(rows), arrayMax(columns), arrayMax(rows), matrix);
+    return {x1: arrayMin(columns), y1: arrayMin(rows), x2: arrayMax(columns), y2: arrayMax(rows)};
+}
+
+function getSmallestMatrix (matrix) {
+    var rectangle = getSmallestRectangleCoordinates(matrix);
+    return getMatrixExtract(rectangle.x1, rectangle.y1, rectangle.x2, rectangle.y2, matrix);
 }
 
 function getMatrixExtract (x1, y1, x2, y2, matrix) {
