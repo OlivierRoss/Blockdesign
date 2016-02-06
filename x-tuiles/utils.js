@@ -119,9 +119,9 @@ function Matrix (matrix) {
             }
             return getMatrixExtract(0, 0, columns - 1, rows - 1, me.matrix);
         },
-        updateCell: function (cell, color, opacity) {
+        updateCell: function (cell, fill, opacity) {
             var cell = this.get(cell);
-            cell.color = color;
+            cell.fill = fill;
             cell.opacity = opacity;
         },
         get: function (cell) {

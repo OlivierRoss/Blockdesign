@@ -30,15 +30,14 @@ xTuilesElement.methods = {
             conteneur.style.left = "0px";
             menu.style.left = "-" + this.menuWidth;
         }
-
         document.getElementById("conteneur").style.left = document.getElementById("menu").style.width = this.menuHidden ? "100px": "0px" ;
         for(var i = 200; i < 1000; i+= 200) window.setTimeout(this.drawComponents.bind(this), i);
         this.menuHidden = !this.menuHidden;
     },
     calculerMetriques: function () {
         // Constantes
-        this.nblignes = (this.hauteur.value * this.carresparpied * 2) - 1;
-        this.nbcarresligne = this.largeur.value * this.carresparpied;
+        this.nblignes = (Math.max(this.hauteur.value, 1) * this.carresparpied * 2) - 1;
+        this.nbcarresligne = Math.max(this.largeur.value, 1) * this.carresparpied;
 
         // Calcul de cote
         var canvas = this.canvas.node();
@@ -49,7 +48,7 @@ xTuilesElement.methods = {
     dessiner: function () {
         this.calculerMetriques();
         this.lignes = this.matrix.extract(this.nblignes, this.nbcarresligne);
-        //this.resetHandicap();
+        this.resetHandicap();
         this.nettoyer();
         this.afficher();
         this.afficherDecompte();
@@ -58,13 +57,13 @@ xTuilesElement.methods = {
         this.svg.selectAll("g.ligne").remove();
     },
     resetHandicap: function () {
-        for(var c in this.couleurs){
-            this.couleurs[c].handicap = 0;
+        var newCount = this.countColors();
+        for(var c in this.couleurs) {
+            this.couleurs[c].handicap = (this.couleurs[c].compte - (newCount[c] || 0)) || 0;
         }
     },
     afficher: function () {
         var me = this;
-
         // Creation des lignes
         var groupes = this.svg.selectAll("g.ligne").data(this.lignes).enter().append("g")
         .attr("index", function (d, i) { return i })
@@ -96,7 +95,6 @@ xTuilesElement.methods = {
         .on("mouseover", function () { if(me.sourisenfoncee) me.changecolor.call(this, me)});
     },
 
-
     ///// Sauvegarde + enregistrement /////
     export: function () {
         var blob = new Blob([JSON.stringify(this.matrix.getMatrix())], {type: "text/plain;charset=utf-8"});
@@ -109,10 +107,9 @@ xTuilesElement.methods = {
         saveSvgAsPng(document.getElementById("svg"), "cloture");
     },
     loadFile: function () {
-        var me = this;
         readUrlAsText(document.getElementById("upload-file").files[0], function (text) { 
             me.loadConfiguration(JSON.parse(text));
-        });
+        }.bind(this));
     },
     loadConfiguration: function (matrix) {
         this.matrix = new Matrix(matrix);
@@ -133,18 +130,10 @@ xTuilesElement.methods = {
         this.couleur = element.id;
     },
     ajouterCouleurs: function (couleurs) {
-        var me = this;
         couleurs.forEach(function (couleur) {
-            me.couleurs[couleur.code] = {
-                compte: 0,
-                handicap: 0,
-                nom: couleur.nom,
-                code: couleur.code,
-                traduction: {}
-            }
-        });
+            this.couleurs[couleur.code] = { compte: 0, handicap: 0, nom: couleur.nom, code: couleur.code }
+        }.bind(this));
     },
-
     afficherDecompte: function () {
         var decompte = "";
         for(var c in this.couleurs){
@@ -176,8 +165,7 @@ xTuilesElement.methods = {
         }
         me.matrix.updateCell(element.node(), couleur.fill, couleur.opacity);
 
-        // TODO si le menu est affiche
-        me.afficherDecompte();
+        if(!this.menuHidden) me.afficherDecompte();
     },
     getCouleur: function () {
         return {fill: this.couleur, opacity: d3.event.altKey ? 0 : 1};
@@ -198,6 +186,17 @@ xTuilesElement.methods = {
         div.onclick = this.changerCouleur.bind(this);
         document.getElementById("footer").appendChild(div);
         color.element = div;
+    },
+    countColors: function () {
+        var colors = {}
+        this.lignes.forEach(function (line) {
+            line.forEach(function (cell) {
+                if(cell.opacity != 0) {
+                    colors[cell.fill] ? ++colors[cell.fill] : colors[cell.fill] = 1;
+                }
+            });
+        });
+        return colors;
     }
     //--- Couleurs ---//
 }
