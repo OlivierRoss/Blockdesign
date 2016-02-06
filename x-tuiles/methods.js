@@ -170,11 +170,13 @@ xTuilesElement.methods = {
         }
         else { // changement couleur
             --me.couleurs[couleur.fill].compte;
-            element.attr("fill", datum.fill);
-            element.attr("fill-opacity", datum.opacity);
+            element.attr("fill", couleur.fill);
+            element.attr("fill-opacity", couleur.opacity);
             ++me.couleurs[couleur.fill].compte;
         }
         me.matrix.updateCell(element.node(), couleur.fill, couleur.opacity);
+
+        // TODO si le menu est affiche
         me.afficherDecompte();
     },
     getCouleur: function () {
