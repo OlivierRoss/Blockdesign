@@ -4,49 +4,16 @@ xTuilesElement.methods = {
             document.getElementById('canvas').style.backgroundImage = "url(" + file + ")";        
         });
     },
-    
     drawComponents: function () {
         var svg = this.svg.node();
         var canvas = this.canvas.node();
         svg.offsetWidth = canvas.offsetWidth;
         this.dessiner();
     },
-    toggleMode: function () {
-        var toggler = document.getElementById("mode-toggler");
-        if(this.mode === "manual"){
-            this.mode = "text";
-            toggler.classList.remove("fa-toggle-on");
-            toggler.classList.add("fa-toggle-off");
-            this.showCursor();
-        }
-        else {
-            this.mode = "manual";
-            toggler.classList.remove("fa-toggle-off");
-            toggler.classList.add("fa-toggle-on");
-            this.hideCursor();
-        }
-    },
-    toggleMenu: function () {
-        var menu = document.getElementById("menu");
-        var conteneur = document.getElementById("conteneur");
-        if(this.menuHidden){
-            conteneur.style.left = this.menuWidth;
-            menu.style.left = "0px";
-        }
-        else {
-            conteneur.style.left = "0px";
-            menu.style.left = "-" + this.menuWidth;
-        }
-        document.getElementById("conteneur").style.left = document.getElementById("menu").style.width = this.menuHidden ? "100px": "0px" ;
-        for(var i = 200; i < 1000; i+= 200) window.setTimeout(this.drawComponents.bind(this), i);
-        this.menuHidden = !this.menuHidden;
-    },
     calculerMetriques: function () {
-        // Constantes
         this.nblignes = (Math.max(this.hauteur.value, 1) * this.carresparpied * 2) - 1;
         this.nbcarresligne = Math.max(this.largeur.value, 1) * this.carresparpied;
 
-        // Calcul de cote
         var canvas = this.canvas.node();
         this.diagonale = Math.min((canvas.offsetWidth - 2) / this.nbcarresligne, (canvas.offsetHeight - 2) / ((this.nblignes / 2) + 0.5));
         this.cote = diagonal2Side(this.diagonale);
@@ -68,6 +35,12 @@ xTuilesElement.methods = {
         for(var c in this.couleurs) {
             this.couleurs[c].handicap = (this.couleurs[c].compte - (newCount[c] || 0)) || 0;
         }
+    },
+    mouseDown: function (element) {
+        this.mode == "manual" ? this.changecolor(element) : this.setCursor(element.node());
+    },
+    mouseOver: function (element) {
+        if(this.mode == "manual" && this.sourisenfoncee) this.changecolor(element);
     },
     afficher: function () {
         var me = this;
@@ -98,8 +71,8 @@ xTuilesElement.methods = {
         .attr("fill", function(d) { return d.fill })
         .attr("stroke", "black")
         .attr("stroke-width", "1px")
-        .on("mousedown", function () { me.changecolor.call(this, me)} )
-        .on("mouseover", function () { if(me.sourisenfoncee) me.changecolor.call(this, me)});
+        .on("mousedown", function () { me.mouseDown.call(me, d3.select(this)) } )
+        .on("mouseover", function () { me.mouseOver.call(me, d3.select(this)) } )
     },
 
     ///// Sauvegarde + enregistrement /////
@@ -148,31 +121,30 @@ xTuilesElement.methods = {
             document.getElementById(couleur.code + "-counter").innerHTML = couleur.compte - couleur.handicap;
         }
     },
-    changecolor: function (me) {
-        var element = d3.select(this);
-        var couleur = me.getCouleur.call(me);
-        var datum = me.matrix.get(element.node());
+    changecolor: function (element) {
+        var couleur = this.getCouleur();
+        var datum = this.matrix.get(element.node());
 
         if(datum.opacity == 0 && couleur.opacity == 0) return; // pas de changement
         else if(datum.opacity == 0 && couleur.opacity != 0){ // nouvelle case
             element.attr("fill", couleur.fill);
             element.attr("fill-opacity", couleur.opacity);
-            ++me.couleurs[couleur.fill].compte;
+            ++this.couleurs[couleur.fill].compte;
         }
         else if(datum.opacity != 0 && couleur.opacity == 0){ // efface
-            --me.couleurs[couleur.fill].compte;
+            --this.couleurs[couleur.fill].compte;
             element.attr("fill", couleur.fill);
             element.attr("fill-opacity", couleur.opacity);
         }
         else { // changement couleur
-            --me.couleurs[couleur.fill].compte;
+            --this.couleurs[couleur.fill].compte;
             element.attr("fill", couleur.fill);
             element.attr("fill-opacity", couleur.opacity);
-            ++me.couleurs[couleur.fill].compte;
+            ++this.couleurs[couleur.fill].compte;
         }
-        me.matrix.updateCell(element.node(), couleur.fill, couleur.opacity);
 
-        if(!this.menuHidden) me.afficherDecompte();
+        this.matrix.updateCell(element.node(), couleur.fill, couleur.opacity);
+        if(!this.menuHidden) this.afficherDecompte();
     },
     getCouleur: function () {
         return {fill: this.couleur, opacity: d3.event.altKey ? 0 : 1};
@@ -206,7 +178,40 @@ xTuilesElement.methods = {
         return colors;
     },
     //--- Couleurs ---//
-    
+
+    ///// Togglers /////
+    toggleMode: function () {
+        var toggler = document.getElementById("mode-toggler");
+        if(this.mode === "manual"){
+            this.mode = "text";
+            toggler.classList.remove("fa-toggle-on");
+            toggler.classList.add("fa-toggle-off");
+            this.showCursor();
+        }
+        else {
+            this.mode = "manual";
+            toggler.classList.remove("fa-toggle-off");
+            toggler.classList.add("fa-toggle-on");
+            this.hideCursor();
+        }
+    },
+    toggleMenu: function () {
+        var menu = document.getElementById("menu");
+        var conteneur = document.getElementById("conteneur");
+        if(this.menuHidden){
+            conteneur.style.left = this.menuWidth;
+            menu.style.left = "0px";
+        }
+        else {
+            conteneur.style.left = "0px";
+            menu.style.left = "-" + this.menuWidth;
+        }
+        document.getElementById("conteneur").style.left = document.getElementById("menu").style.width = this.menuHidden ? "100px": "0px" ;
+        for(var i = 200; i < 1000; i+= 200) window.setTimeout(this.drawComponents.bind(this), i);
+        this.menuHidden = !this.menuHidden;
+    },
+    //--- Togglers ---//
+
     ///// Symboles /////
     drawSymbol: function () {
         if(this.mode != "text") return;
@@ -227,15 +232,19 @@ xTuilesElement.methods = {
         this.dessiner();
     },
     showCursor: function () {
-        this.calculateCursor(); 
-        this.cursorElement.classList.add("blink");
+        if(this.cursorElement) this.cursorElement.classList.add("blink");
     },
     hideCursor: function () {
-        this.cursorElement.classList.remove("blink");
+        if(this.cursorElement) this.cursorElement.classList.remove("blink");
     },
     calculateCursor: function () {
-        var cursorSquare = {x: 2, y: 2};
-        this.cursorElement = this.svg.node().childNodes[cursorSquare.y].childNodes[cursorSquare.x]
+        var cursorSquare = {x: 2, y: 1};
+        this.cursorElement = this.svg.node().childNodes[cursorSquare.y].childNodes[cursorSquare.x];
+    },
+    setCursor: function (element) {
+        this.hideCursor();
+        this.cursorElement = element;
+        this.showCursor();
     }
     //--- Symboles ---//
 }

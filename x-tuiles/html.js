@@ -2,7 +2,7 @@ var xTuilesElement = {
     content: function () {/*
         <style>
             @keyframes blink { 
-               50% { border-color: #ff0000; } 
+               50% { stroke: #ff0000; stroke-width: 3px; } 
             }
             .blink {
                 animation: blink .5s step-end infinite alternate !important;
