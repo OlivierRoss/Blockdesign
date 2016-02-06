@@ -66,6 +66,13 @@ var xTuilesElement = {
                 bottom: 0px;
                 width: 30px;
             }
+            #inputText-container {
+                position: absolute;
+                right: 40px;
+                top: 5px;
+                bottom: 0px;
+                width: 100px;
+            }
             #hauteur, #largeur {
                 width: 40px;
                 float: right;
@@ -130,7 +137,7 @@ var xTuilesElement = {
                         </li> 
                         <li style="height: 25px; padding: 5px;">
                             <label for="largeur"><i class="fa fa-arrows-h" title="Largeur"></i></label>
-                            <input type="number" id="largeur" value="13">
+                            <input type="number" id="largeur" value="6">
                         </li> 
                     </ul>
                 </li>
@@ -159,6 +166,7 @@ var xTuilesElement = {
         <div id="conteneur">
             <div id="header">
                 <div id="conteneur-menu"><i id="bouton-menu" class="fa fa-lg fa-bars" title="Afficher le menu"></i></div>
+                <div id="inputText-container"><input id="inputText" type="text"></div>
             </div>
             <div id="canvas" style="background-size: 100% 100%;"></div>
             <div id="footer"></div>

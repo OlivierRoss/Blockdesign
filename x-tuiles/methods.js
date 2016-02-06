@@ -197,7 +197,21 @@ xTuilesElement.methods = {
             });
         });
         return colors;
-    }
+    },
     //--- Couleurs ---//
+    
+    ///// Symboles /////
+    drawSymbol: function () {
+        var symbol = document.getElementById("inputText").value;
+        if(symbol) symbol = symbol[symbol.length - 1];
+
+        var sampleMatrix = this.symbols[symbol];
+        if(!sampleMatrix) return;
+
+        // Find right place to insert
+        console.log("to write", sampleMatrix);
+    }
+    
+    //--- Symboles ---//
 }
 

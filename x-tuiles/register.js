@@ -24,6 +24,7 @@ xTuilesElement.lifecycle = {
         this.menuHidden = true;
         this.menuWidth = "150px";
         this.matrix = new Matrix();
+        this.symbols = standardSymbols;
         
         // Composants
         this.hauteur = d3.select("#hauteur").node();
@@ -59,6 +60,7 @@ xTuilesElement.lifecycle = {
         document.getElementById("open-background-upload").onclick = function () { document.getElementById("background-image").click() };
         document.getElementById("background-image").onchange = this.updateBackgroundImage.bind(this);
         document.getElementById("upload-file").onchange = this.loadFile.bind(this);
+        document.getElementById("inputText").oninput = this.drawSymbol.bind(this);
         window.onresize = this.drawComponents.bind(this);
 
         // Finalisation
