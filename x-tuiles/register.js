@@ -22,6 +22,7 @@ xTuilesElement.lifecycle = {
                               {nom: "cyan", code: "#0085CA"},
                               {nom: "bleu fonce", code: "#002855"}]);
         this.menuHidden = true;
+        this.mode = "manual";
         this.menuWidth = "150px";
         this.matrix = new Matrix();
         this.symbols = standardSymbols;
@@ -61,6 +62,7 @@ xTuilesElement.lifecycle = {
         document.getElementById("background-image").onchange = this.updateBackgroundImage.bind(this);
         document.getElementById("upload-file").onchange = this.loadFile.bind(this);
         document.getElementById("inputText").oninput = this.drawSymbol.bind(this);
+        document.getElementById("mode-toggler").onclick = this.toggleMode.bind(this);
         window.onresize = this.drawComponents.bind(this);
 
         // Finalisation

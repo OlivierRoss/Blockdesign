@@ -1,6 +1,12 @@
 var xTuilesElement = {
     content: function () {/*
         <style>
+            @keyframes blink { 
+               50% { border-color: #ff0000; } 
+            }
+            .blink {
+                animation: blink .5s step-end infinite alternate !important;
+            }
             .counter-container {
                 position: relative;
                 height: 25px;
@@ -66,12 +72,17 @@ var xTuilesElement = {
                 bottom: 0px;
                 width: 30px;
             }
-            #inputText-container {
-                position: absolute;
-                right: 40px;
-                top: 5px;
-                bottom: 0px;
+            #mode-menu {
+                position: relative;
+                margin-top: 7px;
                 width: 100px;
+                float: right;
+            }
+            #inputText-container {
+                position: relative;
+                padding: 5px;
+                width: 100px;
+                float: right;
             }
             #hauteur, #largeur {
                 width: 40px;
@@ -84,7 +95,7 @@ var xTuilesElement = {
                 top: 8px;
                 width: 30px;
             }
-            .fa-bars, .fa-arrows-v, .fa-arrows-h, .fa-download, .fa-upload, .fa-check, .fa-file-pdf-o {
+            .fa-bars, .fa-arrows-v, .fa-arrows-h, .fa-download, .fa-upload, .fa-check, .fa-file-pdf-o, .fa-font, .fa-toggle-on, .fa-toggle-off, .fa-pencil {
               color: white;
             }
             #conteneur {
@@ -167,6 +178,7 @@ var xTuilesElement = {
             <div id="header">
                 <div id="conteneur-menu"><i id="bouton-menu" class="fa fa-lg fa-bars" title="Afficher le menu"></i></div>
                 <div id="inputText-container"><input id="inputText" type="text"></div>
+                <div id="mode-menu"><i class="fa fa-lg fa-font" title="Mode texte"></i><i id="mode-toggler" class="fa fa-lg fa-toggle-on" style="padding: 0 10px;"></i><i class="fa fa-lg fa-pencil" title="Mode manuel"></i></div>
             </div>
             <div id="canvas" style="background-size: 100% 100%;"></div>
             <div id="footer"></div>

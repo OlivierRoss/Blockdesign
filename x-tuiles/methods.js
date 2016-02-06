@@ -4,20 +4,27 @@ xTuilesElement.methods = {
             document.getElementById('canvas').style.backgroundImage = "url(" + file + ")";        
         });
     },
-    writeExtraitMatrice: function (x, y, matrice) { // Pour ecrire lettres
-        var me = this;
-        matrice.forEach(function (line, indexLigne) {
-            line.forEach(function (tuile, indexColonne) {
-                me.matrice[x + indexLigne][y + indexColonne] = tuile; 
-            });
-        });
-        this.dessiner();
-    },
+    
     drawComponents: function () {
         var svg = this.svg.node();
         var canvas = this.canvas.node();
         svg.offsetWidth = canvas.offsetWidth;
         this.dessiner();
+    },
+    toggleMode: function () {
+        var toggler = document.getElementById("mode-toggler");
+        if(this.mode === "manual"){
+            this.mode = "text";
+            toggler.classList.remove("fa-toggle-on");
+            toggler.classList.add("fa-toggle-off");
+            this.showCursor();
+        }
+        else {
+            this.mode = "manual";
+            toggler.classList.remove("fa-toggle-off");
+            toggler.classList.add("fa-toggle-on");
+            this.hideCursor();
+        }
     },
     toggleMenu: function () {
         var menu = document.getElementById("menu");
@@ -108,7 +115,7 @@ xTuilesElement.methods = {
     },
     loadFile: function () {
         readUrlAsText(document.getElementById("upload-file").files[0], function (text) { 
-            me.loadConfiguration(JSON.parse(text));
+            this.loadConfiguration(JSON.parse(text));
         }.bind(this));
     },
     loadConfiguration: function (matrix) {
@@ -202,16 +209,34 @@ xTuilesElement.methods = {
     
     ///// Symboles /////
     drawSymbol: function () {
+        if(this.mode != "text") return;
         var symbol = document.getElementById("inputText").value;
         if(symbol) symbol = symbol[symbol.length - 1];
 
         var sampleMatrix = this.symbols[symbol];
         if(!sampleMatrix) return;
 
-        // Find right place to insert
-        console.log("to write", sampleMatrix);
+        this.writeSample(this.cursorElement.parentNode.getAttribute("index"), this.cursorElement.getAttribute("index"), sampleMatrix);
+    },
+    writeSample: function (row, column, sample) {
+        sample.forEach(function (line, rowIndex) {
+            line.forEach(function (cell, columnIndex) {
+                this.matrix.updateCell({x: parseInt(column) + columnIndex, y: parseInt(row) + rowIndex}, this.couleur, cell.opacity);
+            }.bind(this));
+        }.bind(this));
+        this.dessiner();
+    },
+    showCursor: function () {
+        this.calculateCursor(); 
+        this.cursorElement.classList.add("blink");
+    },
+    hideCursor: function () {
+        this.cursorElement.classList.remove("blink");
+    },
+    calculateCursor: function () {
+        var cursorSquare = {x: 2, y: 2};
+        this.cursorElement = this.svg.node().childNodes[cursorSquare.y].childNodes[cursorSquare.x]
     }
-    
     //--- Symboles ---//
 }
 
