@@ -42,8 +42,11 @@ xTuilesElement.methods = {
     mouseOver: function (element) {
         if(this.mode == "manual" && this.sourisenfoncee) this.changecolor(element);
     },
-    afficher: function () {
+    afficher: function (columns, distance) {
+        columns = columns || 1;
+        distance = distance || 0;
         var me = this;
+
         // Creation des lignes
         var groupes = this.svg.selectAll("g.ligne").data(this.lignes).enter().append("g")
         .attr("index", function (d, i) { return i })
@@ -65,7 +68,7 @@ xTuilesElement.methods = {
         .attr("index", function (d, i) { return i})
         .attr("height", this.cote)
         .attr("width", this.cote)
-        .attr("x", function (d, i) { return (i * me.diagonale) + me.decalageRotation})
+        .attr("x", function (d, i) { return (i * me.diagonale) + me.decalageRotation + (Math.floor(i / columns) * distance) })
         .attr("y", this.decalageRotation)
         .attr("fill-opacity", function(d) { return d.opacity})
         .attr("fill", function(d) { return d.fill })
@@ -81,9 +84,9 @@ xTuilesElement.methods = {
         saveAs(blob, window.prompt("Nom du fichier: ") + ".txt");
     },
     pdf: function () {
-        // getSmallest
-        // afficher(smallest)
-        // saveSvgAsPng
+        this.lignes = getSmallestMatrix(this.matrix.getMatrix());
+        this.nettoyer();
+        this.afficher(2, 10);
         saveSvgAsPng(document.getElementById("svg"), "cloture");
     },
     loadFile: function () {
@@ -239,7 +242,7 @@ xTuilesElement.methods = {
     },
     calculateCursor: function () {
         var cursorSquare = {x: 2, y: 1};
-        this.cursorElement = this.svg.node().childNodes[cursorSquare.y].childNodes[cursorSquare.x];
+ // getSmallest       this.cursorElement = this.svg.node().childNodes[cursorSquare.y].childNodes[cursorSquare.x];
     },
     setCursor: function (element) {
         this.hideCursor();
