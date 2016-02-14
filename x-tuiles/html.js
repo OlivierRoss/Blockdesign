@@ -151,11 +151,11 @@ var xTuilesElement = {
                     <ul id="counter-container" class="dropdown-menu">
                         <li style="height: 25px; padding: 5px;">
                             <label for="hauteur"><i class="fa fa-arrows-v" title="Hauteur"></i></label>
-                            <input type="number" id="hauteur" value="2">
+                            <input type="number" id="hauteur" value="20">
                         </li> 
                         <li style="height: 25px; padding: 5px;">
                             <label for="largeur"><i class="fa fa-arrows-h" title="Largeur"></i></label>
-                            <input type="number" id="largeur" value="6">
+                            <input type="number" id="largeur" value="50">
                         </li> 
                     </ul>
                 </li>
