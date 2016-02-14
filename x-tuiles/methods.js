@@ -72,7 +72,7 @@ xTuilesElement.methods = {
         .attr("y", this.decalageRotation)
         .attr("fill-opacity", function(d) { return d.opacity})
         .attr("fill", function(d) { return d.fill })
-        .attr("stroke", "black")
+        .attr("stroke", "#424242")
         .attr("stroke-width", "1px")
         .on("mousedown", function () { me.mouseDown.call(me, d3.select(this)) } )
         .on("mouseover", function () { me.mouseOver.call(me, d3.select(this)) } )
