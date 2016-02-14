@@ -11,8 +11,8 @@ xTuilesElement.methods = {
         this.dessiner();
     },
     calculerMetriques: function () {
-        this.nblignes = (Math.max(this.hauteur.value, 1) * this.carresparpied * 2) - 1;
-        this.nbcarresligne = Math.max(this.largeur.value, 1) * this.carresparpied;
+        this.nblignes = (Math.max(this.hauteur.value, 1) - 1) * 2 + 1;
+        this.nbcarresligne = Math.max(this.largeur.value, 1);
 
         var canvas = this.canvas.node();
         this.diagonale = Math.min((canvas.offsetWidth - 2) / this.nbcarresligne, (canvas.offsetHeight - 2) / ((this.nblignes / 2) + 0.5));

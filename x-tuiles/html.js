@@ -137,7 +137,7 @@ var xTuilesElement = {
                 height: 200px;
                 width: 100px;
                 border: 1px solid black;
-                display: hidden;
+                display: none;
             }
         </style>
         <div id="menu">
