@@ -19,6 +19,10 @@ xTuilesElement.methods = {
         this.cote = diagonal2Side(this.diagonale);
         this.decalageRotation = (this.diagonale - this.cote) / 2;
     },
+    clear: function () {
+        this.matrix = new Matrix();
+        this.dessiner();
+    },
     dessiner: function () {
         this.calculerMetriques();
         this.lignes = this.matrix.extract(this.nblignes, this.nbcarresligne);

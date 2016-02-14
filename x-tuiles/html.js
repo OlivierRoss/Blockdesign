@@ -72,6 +72,13 @@ var xTuilesElement = {
                 bottom: 0px;
                 width: 30px;
             }
+            #clear-container {
+                position: absolute;
+                left: 35px;
+                top: 5px;
+                bottom: 0px;
+                width: 30px;
+            }
             #mode-menu {
                 position: relative;
                 margin-top: 7px;
@@ -95,7 +102,7 @@ var xTuilesElement = {
                 top: 8px;
                 width: 30px;
             }
-            .fa-bars, .fa-arrows-v, .fa-arrows-h, .fa-download, .fa-upload, .fa-check, .fa-file-pdf-o, .fa-font, .fa-toggle-on, .fa-toggle-off, .fa-pencil {
+            .fa-bars, .fa-arrows-v, .fa-arrows-h, .fa-download, .fa-upload, .fa-check, .fa-file-pdf-o, .fa-font, .fa-toggle-on, .fa-toggle-off, .fa-pencil, .fa-repeat {
               color: white;
             }
             #conteneur {
@@ -177,6 +184,7 @@ var xTuilesElement = {
         <div id="conteneur">
             <div id="header">
                 <div id="conteneur-menu"><i id="bouton-menu" class="fa fa-lg fa-bars" title="Afficher le menu"></i></div>
+                <div id="clear-container"><i id="clear" class="fa fa-lg fa-repeat" title="Effacer"></i></div>
                 <div id="inputText-container"><input id="inputText" type="text"></div>
                 <div id="mode-menu"><i class="fa fa-lg fa-font" title="Mode texte"></i><i id="mode-toggler" class="fa fa-lg fa-toggle-on" style="padding: 0 10px;"></i><i class="fa fa-lg fa-pencil" title="Mode manuel"></i></div>
             </div>

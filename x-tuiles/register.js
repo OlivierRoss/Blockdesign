@@ -63,6 +63,7 @@ xTuilesElement.lifecycle = {
         document.getElementById("upload-file").onchange = this.loadFile.bind(this);
         document.getElementById("inputText").oninput = this.drawSymbol.bind(this);
         document.getElementById("mode-toggler").onclick = this.toggleMode.bind(this);
+        document.getElementById("clear").onclick = this.clear.bind(this);
         window.onresize = this.drawComponents.bind(this);
 
         // Finalisation
