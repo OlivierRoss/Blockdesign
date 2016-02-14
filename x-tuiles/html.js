@@ -39,11 +39,10 @@ var xTuilesElement = {
                 height: 100%;
             }
             .echantillon {
-                position: absolute;
-                top: 5px;
-                left: 5px;
-                bottom: 5px;
-                right: 5px;
+                position: relative;
+                width: calc(100% - 10px);
+                height: calc(100% - 10px);
+                margin: 5px;
             }
             .compteur {
                 text-align: center;
@@ -65,19 +64,11 @@ var xTuilesElement = {
                 height: 30px;
                 background-color: grey;
             }
-            #conteneur-menu {
-                position: absolute;
-                left: 5px;
-                top: 5px;
-                bottom: 0px;
-                width: 30px;
-            }
-            #clear-container {
-                position: absolute;
-                left: 35px;
-                top: 5px;
-                bottom: 0px;
-                width: 30px;
+            #conteneur-menu, #clear-container {
+                position: relative;
+                padding: 6px;
+                width: 20px;
+                float: left;
             }
             #mode-menu {
                 position: relative;
@@ -139,6 +130,15 @@ var xTuilesElement = {
                 margin: 0px;
                 list-style-type: none;
             }
+            #color-selector {
+                position: absolute;
+                right: 10px;
+                top: -200px;
+                height: 200px;
+                width: 100px;
+                border: 1px solid black;
+                display: hidden;
+            }
         </style>
         <div id="menu">
             <ul>
@@ -189,7 +189,11 @@ var xTuilesElement = {
                 <div id="mode-menu"><i class="fa fa-lg fa-font" title="Mode texte"></i><i id="mode-toggler" class="fa fa-lg fa-toggle-on" style="padding: 0 10px;"></i><i class="fa fa-lg fa-pencil" title="Mode manuel"></i></div>
             </div>
             <div id="canvas" style="background-size: 100% 100%;"></div>
-            <div id="footer"></div>
+            <div id="footer">
+                <div id="color-selector">
+                
+                </div>
+            </div>
         </div>
     */
     }
