@@ -109,9 +109,9 @@ xTuilesElement.methods = {
         this.setSelectedColor(ev.currentTarget);
     },
     setSelectedColor: function (element) {
-        var nodes = document.querySelectorAll(".container-echantillon.selected");
+        var nodes = document.querySelectorAll(".container-echantillon-" + this.sampleDisplay + ".selected");
         for(var i = 0; i < nodes.length; ++i){
-            nodes[i].className = "container-echantillon";
+            nodes[i].className = "container-echantillon-" + this.sampleDisplay;
         }
         element.className += " selected";
         this.couleur = element.id;
@@ -166,11 +166,11 @@ xTuilesElement.methods = {
     createPickerSample: function (color, width) {
         var div = document.createElement("div");
         div.id = color.code;
-        div.setAttribute("class", "container-echantillon");
+        div.setAttribute("class", "container-echantillon-" + this.sampleDisplay);
         div.setAttribute("style", "width:" + width + "%;");
         div.innerHTML = '<div class="echantillon" style="background-color: ' + color.code + ';"></div>';
         div.onclick = this.changerCouleur.bind(this);
-        document.getElementById("footer").appendChild(div);
+        document.getElementById("color-selector-h").appendChild(div);
         color.element = div;
     },
     countColors: function () {
@@ -189,17 +189,42 @@ xTuilesElement.methods = {
     ///// Togglers /////
     toggleMode: function () {
         var toggler = document.getElementById("mode-toggler");
+        var csh = document.getElementById("color-selector-h");
+        var csv = document.getElementById("color-selector-v");
         if(this.mode === "manual"){
             this.mode = "text";
+            this.sampleDisplay = "v";
             toggler.classList.remove("fa-toggle-on");
             toggler.classList.add("fa-toggle-off");
             this.showCursor();
+
+            document.getElementById("input-text-container").style.display = "block";
+
+            while(csh.childNodes.length) {
+                var el = csh.childNodes[0];
+                el.className = "container-echantillon-v";
+                el.style.width = "";
+                csv.appendChild(el);
+            }
+            csv.style.display = "block";
         }
         else {
             this.mode = "manual";
+            this.sampleDisplay = "h";
             toggler.classList.remove("fa-toggle-off");
             toggler.classList.add("fa-toggle-on");
             this.hideCursor();
+
+            document.getElementById("input-text-container").style.display = "none";
+
+            var width = 100.0 / Object.keys(this.couleurs).length;
+            while(csv.childNodes.length) {
+                var el = csv.childNodes[0];
+                el.style.width = width + "%";
+                el.className = "container-echantillon-h";
+                csh.appendChild(el);
+            }
+            csv.style.display = "none";
         }
     },
     toggleMenu: function () {
@@ -222,7 +247,7 @@ xTuilesElement.methods = {
     ///// Symboles /////
     drawSymbol: function () {
         if(this.mode != "text") return;
-        var symbol = document.getElementById("inputText").value;
+        var symbol = document.getElementById("input-text").value;
         if(symbol) symbol = symbol[symbol.length - 1];
 
         var sampleMatrix = this.symbols[symbol];

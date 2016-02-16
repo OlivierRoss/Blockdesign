@@ -26,6 +26,7 @@ xTuilesElement.lifecycle = {
         this.menuWidth = "150px";
         this.matrix = new Matrix();
         this.symbols = standardSymbols;
+        this.sampleDisplay = "h";
         
         // Composants
         this.hauteur = d3.select("#hauteur").node();
@@ -61,7 +62,7 @@ xTuilesElement.lifecycle = {
         document.getElementById("open-background-upload").onclick = function () { document.getElementById("background-image").click() };
         document.getElementById("background-image").onchange = this.updateBackgroundImage.bind(this);
         document.getElementById("upload-file").onchange = this.loadFile.bind(this);
-        document.getElementById("inputText").oninput = this.drawSymbol.bind(this);
+        document.getElementById("input-text").oninput = this.drawSymbol.bind(this);
         document.getElementById("mode-toggler").onclick = this.toggleMode.bind(this);
         document.getElementById("clear").onclick = this.clear.bind(this);
         window.onresize = this.drawComponents.bind(this);

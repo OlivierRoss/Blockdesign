@@ -30,10 +30,15 @@ var xTuilesElement = {
                 transform-origin: 50% 50%;
                 transform: rotate(45deg);
             }
-            .container-echantillon:hover, .selected {
+            .container-echantillon-v:hover, .container-echantillon-h:hover, .selected {
                 background-color: white;
             }
-            .container-echantillon {
+            .container-echantillon-v {
+                position: relative;
+                height: 30px;
+                width: 100%;
+            }
+            .container-echantillon-h {
                 position: relative;
                 float: left;
                 height: 100%;
@@ -76,11 +81,11 @@ var xTuilesElement = {
                 width: 100px;
                 float: right;
             }
-            #inputText-container {
+            #input-text-container {
+                display: none;
                 position: relative;
                 padding: 5px;
                 width: 100px;
-                float: right;
             }
             #hauteur, #largeur {
                 width: 40px;
@@ -130,14 +135,19 @@ var xTuilesElement = {
                 margin: 0px;
                 list-style-type: none;
             }
-            #color-selector {
+            #color-selector-h {
+                width: 100%;
+                height: 100%;
+            }
+            #color-selector-v {
                 position: absolute;
                 right: 10px;
                 top: -200px;
                 height: 200px;
                 width: 100px;
-                border: 1px solid black;
+                overflow: auto;
                 display: none;
+                background-color: grey;
             }
         </style>
         <div id="menu">
@@ -185,14 +195,13 @@ var xTuilesElement = {
             <div id="header">
                 <div id="conteneur-menu"><i id="bouton-menu" class="fa fa-lg fa-bars" title="Afficher le menu"></i></div>
                 <div id="clear-container"><i id="clear" class="fa fa-lg fa-repeat" title="Effacer"></i></div>
-                <div id="inputText-container"><input id="inputText" type="text"></div>
                 <div id="mode-menu"><i class="fa fa-lg fa-font" title="Mode texte"></i><i id="mode-toggler" class="fa fa-lg fa-toggle-on" style="padding: 0 10px;"></i><i class="fa fa-lg fa-pencil" title="Mode manuel"></i></div>
             </div>
             <div id="canvas" style="background-size: 100% 100%;"></div>
             <div id="footer">
-                <div id="color-selector">
-                
-                </div>
+                <div id="input-text-container"><input id="input-text" type="text"></div>
+                <div id="color-selector-h"></div>
+                <div id="color-selector-v"></div>
             </div>
         </div>
     */
