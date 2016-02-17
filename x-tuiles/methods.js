@@ -83,13 +83,6 @@ xTuilesElement.methods = {
     },
 
     ///// Sauvegarde + enregistrement /////
-    saveCharacter: function () {
-        var matrix = this.matrix.getMatrix();
-        var rectangle = getSmallestRectangleCoordinates(matrix);
-        var character = getMatrixExtract(rectangle.x1, rectangle.y1, rectangle.x2, rectangle.y2, matrix);
-        console.log(rectangle);
-        console.log(character);
-    },
     export: function () {
         var blob = new Blob([JSON.stringify(this.matrix.getMatrix())], {type: "text/plain;charset=utf-8"});
         saveAs(blob, window.prompt("Nom du fichier: ") + ".txt");
@@ -252,23 +245,41 @@ xTuilesElement.methods = {
     //--- Togglers ---//
 
     ///// Symboles /////
-    drawSymbol: function () {
+    saveSymbol: function () {
+        var matrix = this.matrix.getMatrix();
+        var rectangle = getSmallestRectangleCoordinates(matrix);
+        var symbolMatrix = getMatrixExtract(rectangle.x1, rectangle.y1, rectangle.x2, rectangle.y2, matrix);
+        var symbol = [];
+
+        var needShift = rectangle.y1 % 2 == 1;
+        symbolMatrix.forEach(function (line, rowIndex) {
+            var shift = needShift && rowIndex % 2 == 0 ? 1 : 0;
+            line.forEach(function (cell, columnIndex) {
+               if(cell.opacity != 0) symbol.push({x: (columnIndex + shift), y: rowIndex});
+            });
+        });
+        console.log(JSON.stringify(symbol));
+    },
+    drawText: function () {
+        // S'assurer qu'on est dans le bon mode
         if(this.mode != "text") return;
-        var symbol = document.getElementById("input-text").value;
+        var text = document.getElementById("input-text").value;
+        for(var i = 0; i < text.length; ++i) {
+            var symbol = this.symbols[text[i]] || this.symbols["default"];
+        }
+        return;
         if(symbol) symbol = symbol[symbol.length - 1];
 
-        var sampleMatrix = this.symbols[symbol];
-        if(!sampleMatrix) return;
+        var symbolCells = this.symbols[symbol];
+        if(!symbolCells) return;
 
-        this.writeSample(this.cursorElement.parentNode.getAttribute("index"), this.cursorElement.getAttribute("index"), sampleMatrix);
+        this.writeSymbol(this.cursorElement.parentNode.getAttribute("index"), this.cursorElement.getAttribute("index"), symbolCells);
     },
-    writeSample: function (row, column, sample) {
+    writeSymbol: function (row, column, symbolCells) {
         var needShift = row % 2 == 1;
-        sample.forEach(function (line, rowIndex) {
-            var shift = needShift && rowIndex % 2 == 0 ? 0 : 1;
-            line.forEach(function (cell, columnIndex) {
-                this.matrix.updateCell({x: parseInt(column) + columnIndex + shift, y: parseInt(row) + rowIndex}, this.couleur, cell.opacity);
-            }.bind(this));
+        symbolCells.forEach(function (cell) {
+            var shift = needShift && cell.y % 2 == 0 ? 0 : 1;
+            this.matrix.updateCell({x: parseInt(column) + cell.x + shift, y: parseInt(row) + cell.y}, this.couleur, cell.opacity);
         }.bind(this));
         this.dessiner();
     },

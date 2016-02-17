@@ -62,10 +62,10 @@ xTuilesElement.lifecycle = {
         document.getElementById("open-background-upload").onclick = function () { document.getElementById("background-image").click() };
         document.getElementById("background-image").onchange = this.updateBackgroundImage.bind(this);
         document.getElementById("upload-file").onchange = this.loadFile.bind(this);
-        document.getElementById("input-text").oninput = this.drawSymbol.bind(this);
+        document.getElementById("input-text").onchange = this.drawText.bind(this);
         document.getElementById("mode-toggler").onclick = this.toggleMode.bind(this);
         document.getElementById("clear").onclick = this.clear.bind(this);
-        document.getElementById("save-character").onclick = this.saveCharacter.bind(this);
+        document.getElementById("save-symbol").onclick = this.saveSymbol.bind(this);
         window.onresize = this.drawComponents.bind(this);
 
         // Finalisation
