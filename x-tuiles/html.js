@@ -69,7 +69,7 @@ var xTuilesElement = {
                 height: 30px;
                 background-color: grey;
             }
-            #conteneur-menu, #clear-container {
+            #conteneur-menu, #clear-container, #save-character-container {
                 position: relative;
                 padding: 6px;
                 width: 20px;
