@@ -261,27 +261,26 @@ xTuilesElement.methods = {
         console.log(JSON.stringify(symbol));
     },
     drawText: function () {
-        // S'assurer qu'on est dans le bon mode
-        if(this.mode != "text") return;
+        if(this.mode != "text" || !this.cursorElement) return;
         var text = document.getElementById("input-text").value;
         for(var i = 0; i < text.length; ++i) {
             var symbol = this.symbols[text[i]] || this.symbols["default"];
+            var column = this.cursorElement.getAttribute("index");
+            var symbolWidth = this.writeSymbol(this.cursorElement.parentNode.getAttribute("index"), column, symbol);
+            this.setCursor(this.cursorElement.parentNode.childNodes[parseInt(column) + symbolWidth + 2]);
         }
-        return;
-        if(symbol) symbol = symbol[symbol.length - 1];
-
-        var symbolCells = this.symbols[symbol];
-        if(!symbolCells) return;
-
-        this.writeSymbol(this.cursorElement.parentNode.getAttribute("index"), this.cursorElement.getAttribute("index"), symbolCells);
+        this.dessiner();
     },
+    // Retourne la largeur maximale pour etre capable de deplacer le curseur
     writeSymbol: function (row, column, symbolCells) {
+        var maxWidth = 1;
         var needShift = row % 2 == 1;
         symbolCells.forEach(function (cell) {
+            maxWidth = Math.max(maxWidth, cell.x);
             var shift = needShift && cell.y % 2 == 0 ? 0 : 1;
             this.matrix.updateCell({x: parseInt(column) + cell.x + shift, y: parseInt(row) + cell.y}, this.couleur, cell.opacity);
         }.bind(this));
-        this.dessiner();
+        return maxWidth;
     },
     showCursor: function () {
         if(this.cursorElement) this.cursorElement.classList.add("blink");
