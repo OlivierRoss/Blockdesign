@@ -83,6 +83,13 @@ xTuilesElement.methods = {
     },
 
     ///// Sauvegarde + enregistrement /////
+    saveCharacter: function () {
+        var matrix = this.matrix.getMatrix();
+        var rectangle = getSmallestRectangleCoordinates(matrix);
+        var character = getMatrixExtract(rectangle.x1, rectangle.y1, rectangle.x2, rectangle.y2, matrix);
+        console.log(rectangle);
+        console.log(character);
+    },
     export: function () {
         var blob = new Blob([JSON.stringify(this.matrix.getMatrix())], {type: "text/plain;charset=utf-8"});
         saveAs(blob, window.prompt("Nom du fichier: ") + ".txt");
@@ -256,9 +263,11 @@ xTuilesElement.methods = {
         this.writeSample(this.cursorElement.parentNode.getAttribute("index"), this.cursorElement.getAttribute("index"), sampleMatrix);
     },
     writeSample: function (row, column, sample) {
+        var needShift = row % 2 == 1;
         sample.forEach(function (line, rowIndex) {
+            var shift = needShift && rowIndex % 2 == 0 ? 0 : 1;
             line.forEach(function (cell, columnIndex) {
-                this.matrix.updateCell({x: parseInt(column) + columnIndex, y: parseInt(row) + rowIndex}, this.couleur, cell.opacity);
+                this.matrix.updateCell({x: parseInt(column) + columnIndex + shift, y: parseInt(row) + rowIndex}, this.couleur, cell.opacity);
             }.bind(this));
         }.bind(this));
         this.dessiner();
@@ -268,10 +277,6 @@ xTuilesElement.methods = {
     },
     hideCursor: function () {
         if(this.cursorElement) this.cursorElement.classList.remove("blink");
-    },
-    calculateCursor: function () {
-        var cursorSquare = {x: 2, y: 1};
- // getSmallest       this.cursorElement = this.svg.node().childNodes[cursorSquare.y].childNodes[cursorSquare.x];
     },
     setCursor: function (element) {
         this.hideCursor();

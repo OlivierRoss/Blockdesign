@@ -65,6 +65,7 @@ xTuilesElement.lifecycle = {
         document.getElementById("input-text").oninput = this.drawSymbol.bind(this);
         document.getElementById("mode-toggler").onclick = this.toggleMode.bind(this);
         document.getElementById("clear").onclick = this.clear.bind(this);
+        document.getElementById("save-character").onclick = this.saveCharacter.bind(this);
         window.onresize = this.drawComponents.bind(this);
 
         // Finalisation
