@@ -258,7 +258,12 @@ xTuilesElement.methods = {
                if(cell.opacity != 0) symbol.push({x: (columnIndex + shift), y: rowIndex});
             });
         });
-        console.log(JSON.stringify(symbol));
+        var caracter = window.prompt("Associer votre dessin a quel caractere");
+        this.symbols[caracter] = symbol;
+        var symbolText = document.createElement("div");
+        symbolText.innerHTML = caracter + " : " + JSON.stringify(symbol);
+        document.body.appendChild(symbolText);
+        
     },
     drawText: function () {
         if(this.mode != "text" || !this.cursorElement) return;
