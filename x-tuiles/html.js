@@ -167,28 +167,23 @@ var xTuilesElement = {
                             <label for="largeur"><i class="fa fa-arrows-h" title="Largeur"></i></label>
                             <input type="number" id="largeur" value="50">
                         </li> 
+                        <li style="height: 25px; padding: 5px;">
+                            <input id="background-image" type="file" style="display: none;">
+                            <div id="open-background-upload" style="width: 20px; margin: 0 auto;"><i class="fa fa-camera" title="Image d'arriere-plan"></i></div>
+                        </li> 
                     </ul>
                 </li>
                 <li class="dropdown">
                     <div style="width: 20px; margin: 0 auto;"><i class="fa fa-floppy-o" title="Sauvegardes et chargement"></i></div>
                     <ul id="counter-container" class="dropdown-menu">
                         <li style="height: 25px; padding: 5px;">
-                            <i id="pdf" class="fa fa-file-pdf-o" style="float: left;" title="Exportation en format SVG"></i>
-                            <i id="export" class="fa fa-lg fa-download" title="Enregistrer"></i>
-                            <i id="open" class="fa fa-lg fa-upload" title="Ouvrir"></i>
+                            <i id="pdf" class="fa fa-file-pdf-o" style="float: left; width: 33%; text-align: left;" title="Exportation en format SVG"></i>
+                            <i id="export" class="fa fa-lg fa-download" style="float: left; width: 33%; text-align: center;" title="Enregistrer"></i>
+                            <i id="open" class="fa fa-lg fa-upload" style="float: left; width: 33%; text-align: right;" title="Ouvrir"></i>
                             <input id="upload-file" type="file" style="display: none;">
                         </li> 
                     </ul>
                 </li>
-                <li class="dropdown">
-                    <div id="open-background-upload" style="width: 20px; margin: 0 auto;"><i class="fa fa-camera" title="Image d'arriere-plan"></i></div>
-                    <ul id="counter-container" class="dropdown-menu">
-                        <li style="height: 25px; padding: 5px;">
-                            <input id="background-image" type="file" style="display: none;">
-                        </li> 
-                    </ul>
-                </li>
-
             </ul>
         </div>
         <div id="conteneur">
