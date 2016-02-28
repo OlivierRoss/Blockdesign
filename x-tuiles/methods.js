@@ -139,12 +139,12 @@ xTuilesElement.methods = {
             ++this.couleurs[couleur.fill].compte;
         }
         else if(datum.opacity != 0 && couleur.opacity == 0){ // efface
-            --this.couleurs[couleur.fill].compte;
+            --this.couleurs[datum.fill].compte;
             element.attr("fill", couleur.fill);
             element.attr("fill-opacity", couleur.opacity);
         }
         else { // changement couleur
-            --this.couleurs[couleur.fill].compte;
+            --this.couleurs[datum.fill].compte;
             element.attr("fill", couleur.fill);
             element.attr("fill-opacity", couleur.opacity);
             ++this.couleurs[couleur.fill].compte;
