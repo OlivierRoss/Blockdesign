@@ -196,7 +196,11 @@ var xTuilesElement = {
                 <div id="conteneur-menu"><i id="bouton-menu" class="fa fa-lg fa-bars" title="Afficher le menu"></i></div>
                 <div id="clear-container"><i id="clear" class="fa fa-lg fa-repeat" title="Effacer"></i></div>
                 <div id="save-symbol-container"><i id="save-symbol" class="fa fa-lg fa-check" title="Effacer"></i></div>
-                <div id="mode-menu"><i class="fa fa-lg fa-font" title="Mode texte"></i><i id="mode-toggler" class="fa fa-lg fa-toggle-on" style="padding: 0 10px;"></i><i class="fa fa-lg fa-pencil" title="Mode manuel"></i></div>
+                <div id="mode-menu">
+                    <i id="mode-toggler-text" class="fa fa-lg fa-font" title="Mode texte"></i>
+                    <i id="mode-toggler" class="fa fa-lg fa-toggle-on" style="padding: 0 10px;"></i>
+                    <i id="mode-toggler-manual" class="fa fa-lg fa-pencil" title="Mode manuel"></i>
+                </div>
             </div>
             <div id="canvas" style="background-size: 100% 100%;"></div>
             <div id="footer">
