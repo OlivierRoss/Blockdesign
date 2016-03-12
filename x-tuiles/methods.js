@@ -10,12 +10,14 @@ xTuilesElement.methods = {
         svg.offsetWidth = canvas.offsetWidth;
         this.dessiner();
     },
-    calculerMetriques: function () {
-        this.nblignes = (Math.max(this.hauteur.value, 1) - 1) * 2 + 1;
-        this.nbcarresligne = Math.max(this.largeur.value, 1);
+    calculerMetriques: function (lines, columns) {
+      if(!lines && !columns){
+        lines = this.nblignes = (Math.max(this.hauteur.value, 1) - 1) * 2 + 1;
+        columns = this.nbcarresligne = Math.max(this.largeur.value, 1);
+      }
 
         var canvas = this.canvas.node();
-        this.diagonale = Math.min((canvas.offsetWidth - 2) / this.nbcarresligne, (canvas.offsetHeight - 2) / ((this.nblignes / 2) + 0.5));
+        this.diagonale = Math.min((canvas.offsetWidth - 2) / columns, (canvas.offsetHeight - 2) / ((lines / 2) + 0.5));
         this.cote = diagonal2Side(this.diagonale);
         this.decalageRotation = (this.diagonale - this.cote) / 2;
     },
@@ -88,9 +90,12 @@ xTuilesElement.methods = {
         saveAs(blob, window.prompt("Nom du fichier: ") + ".txt");
     },
     pdf: function () {
+        var divisionFrequency = 2, divisionWidth = 10;
+        var totalDivisionsWidth = (this.nbcarresligne / divisionFrequency) * divisionWidth;
         this.lignes = getSmallestMatrix(this.matrix.getMatrix());
+        this.calculerMetriques(this.nblignes, this.nbcarresligne + Math.ceil(totalDivisionsWidth / this.diagonale) + 1);
         this.nettoyer();
-        this.afficher(2, 10);
+        this.afficher(divisionFrequency, divisionWidth);
         saveSvgAsPng(document.getElementById("svg"), "cloture");
     },
     loadFile: function () {
