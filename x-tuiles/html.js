@@ -1,8 +1,8 @@
 var xTuilesElement = {
     content: function () {/*
         <style>
-            @keyframes blink { 
-               50% { stroke: #ff0000; stroke-width: 3px; } 
+            @keyframes blink {
+               50% { stroke: #ff0000; stroke-width: 3px; }
             }
             .blink {
                 animation: blink .5s step-end infinite alternate !important;
@@ -51,7 +51,7 @@ var xTuilesElement = {
             }
             .compteur {
                 text-align: center;
-                height: 30px; 
+                height: 30px;
                 padding: 5px;
             }
             #canvas {
@@ -162,15 +162,15 @@ var xTuilesElement = {
                         <li style="height: 25px; padding: 5px;">
                             <label for="hauteur"><i class="fa fa-arrows-v" title="Hauteur"></i></label>
                             <input type="number" id="hauteur" value="20">
-                        </li> 
+                        </li>
                         <li style="height: 25px; padding: 5px;">
                             <label for="largeur"><i class="fa fa-arrows-h" title="Largeur"></i></label>
                             <input type="number" id="largeur" value="50">
-                        </li> 
+                        </li>
                         <li style="height: 25px; padding: 5px;">
                             <input id="background-image" type="file" style="display: none;">
                             <div id="open-background-upload" style="width: 20px; margin: 0 auto;"><i class="fa fa-camera" title="Image d'arriere-plan"></i></div>
-                        </li> 
+                        </li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -181,7 +181,7 @@ var xTuilesElement = {
                             <i id="export" class="fa fa-lg fa-download" style="float: left; width: 33%; text-align: center;" title="Enregistrer"></i>
                             <i id="open" class="fa fa-lg fa-upload" style="float: left; width: 33%; text-align: right;" title="Ouvrir"></i>
                             <input id="upload-file" type="file" style="display: none;">
-                        </li> 
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -202,6 +202,9 @@ var xTuilesElement = {
                 <div id="input-text-container"><input id="input-text" type="text"></div>
                 <div id="color-selector-h"></div>
                 <div id="color-selector-v"></div>
+                <div id="color-selector-displayer" style="position: absolute; top: 0px; bottom: 0px; right: 0px; width: 9.09091%; display: none;">
+                    <div id="active-sample" class="echantillon" style="background-color: black;"></div>
+                </div>
             </div>
         </div>
     */

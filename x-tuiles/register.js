@@ -27,7 +27,7 @@ xTuilesElement.lifecycle = {
         this.matrix = new Matrix();
         this.symbols = standardSymbols;
         this.sampleDisplay = "h";
-        
+
         // Composants
         this.hauteur = d3.select("#hauteur").node();
         this.largeur = d3.select("#largeur").node();
@@ -66,6 +66,7 @@ xTuilesElement.lifecycle = {
         document.getElementById("mode-menu").onclick = this.toggleMode.bind(this);
         document.getElementById("clear").onclick = this.clear.bind(this);
         document.getElementById("save-symbol").onclick = this.saveSymbol.bind(this);
+        document.getElementById("color-selector-displayer").onclick = this.toggleVerticalColorSelector.bind(this);
         window.onresize = this.drawComponents.bind(this);
 
         // Finalisation

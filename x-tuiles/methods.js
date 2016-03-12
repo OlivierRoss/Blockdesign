@@ -1,7 +1,7 @@
 xTuilesElement.methods = {
     updateBackgroundImage: function () {
         readUrlAsData(document.getElementById("background-image").files[0], function (file) {
-            document.getElementById('canvas').style.backgroundImage = "url(" + file + ")";        
+            document.getElementById('canvas').style.backgroundImage = "url(" + file + ")";
         });
     },
     drawComponents: function () {
@@ -58,15 +58,15 @@ xTuilesElement.methods = {
         .attr("index", function (d, i) { return i})
         .attr("transform", function (d, i) {
             if(i % 2 === 0){
-                return "translate(0, " + me.diagonale * i / 2 + ")" 
+                return "translate(0, " + me.diagonale * i / 2 + ")"
             }
             else {
-                return "translate(" + me.diagonale / 2 + ", " + me.diagonale * i / 2 + ")" 
+                return "translate(" + me.diagonale / 2 + ", " + me.diagonale * i / 2 + ")"
             }
         });
 
         // Creation des carres
-        groupes.selectAll("rect").data(function(d) { return d; }).enter().append("rect") 
+        groupes.selectAll("rect").data(function(d) { return d; }).enter().append("rect")
         .attr("index", function (d, i) { return i })
         .attr("class", "carre")
         .attr("index", function (d, i) { return i})
@@ -94,7 +94,7 @@ xTuilesElement.methods = {
         saveSvgAsPng(document.getElementById("svg"), "cloture");
     },
     loadFile: function () {
-        readUrlAsText(document.getElementById("upload-file").files[0], function (text) { 
+        readUrlAsText(document.getElementById("upload-file").files[0], function (text) {
             this.loadConfiguration(JSON.parse(text));
         }.bind(this));
     },
@@ -107,6 +107,7 @@ xTuilesElement.methods = {
     ///// Couleurs /////
     changerCouleur: function (ev) {
         this.setSelectedColor(ev.currentTarget);
+        if(this.sampleDisplay == "v" && this.mode == "text") this.toggleVerticalColorSelector();
     },
     setSelectedColor: function (element) {
         var nodes = document.querySelectorAll(".container-echantillon-" + this.sampleDisplay + ".selected");
@@ -114,7 +115,7 @@ xTuilesElement.methods = {
             nodes[i].className = "container-echantillon-" + this.sampleDisplay;
         }
         element.className += " selected";
-        this.couleur = element.id;
+        document.getElementById("active-sample").style.backgroundColor = this.couleur = element.id;
     },
     ajouterCouleurs: function (couleurs) {
         couleurs.forEach(function (couleur) {
@@ -157,7 +158,7 @@ xTuilesElement.methods = {
         return {fill: this.couleur, opacity: d3.event.altKey ? 0 : 1};
     },
     createColorCounter: function (color) {
-        var li = document.createElement("li"); 
+        var li = document.createElement("li");
         li.id = color + "-counter-container";
         li.setAttribute("class", "counter-container");
         li.innerHTML = '<div id="' + color + '-sample" class="sample" style="background-color: ' + color + '"></div><div id="' + color + '-counter" class="counter"></div>'
@@ -187,6 +188,11 @@ xTuilesElement.methods = {
     //--- Couleurs ---//
 
     ///// Togglers /////
+    toggleVerticalColorSelector: function () {
+        var selector = document.getElementById("color-selector-v");
+        selector.style.display = selector.style.display == "none" ? "block" : "none";
+    },
+
     toggleMode: function () {
         var toggler = document.getElementById("mode-toggler");
         var csh = document.getElementById("color-selector-h");
@@ -199,6 +205,7 @@ xTuilesElement.methods = {
             this.showCursor();
 
             document.getElementById("input-text-container").style.display = "block";
+            document.getElementById("color-selector-displayer").style.display = "block";
 
             while(csh.childNodes.length) {
                 var el = csh.childNodes[0];
@@ -206,7 +213,6 @@ xTuilesElement.methods = {
                 el.style.width = "";
                 csv.appendChild(el);
             }
-            csv.style.display = "block";
         }
         else {
             this.mode = "manual";
@@ -216,6 +222,7 @@ xTuilesElement.methods = {
             this.hideCursor();
 
             document.getElementById("input-text-container").style.display = "none";
+            document.getElementById("color-selector-displayer").style.display = "none";
 
             var width = 100.0 / Object.keys(this.couleurs).length;
             while(csv.childNodes.length) {
@@ -263,7 +270,7 @@ xTuilesElement.methods = {
         var symbolText = document.createElement("div");
         symbolText.innerHTML = caracter + " : " + JSON.stringify(symbol);
         document.body.appendChild(symbolText);
-        
+
     },
     drawText: function () {
         if(this.mode != "text" || !this.cursorElement) return;
@@ -300,4 +307,3 @@ xTuilesElement.methods = {
     }
     //--- Symboles ---//
 }
-
