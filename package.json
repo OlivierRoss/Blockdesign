@@ -1,0 +1,25 @@
+{
+  "name": "blockdesign",
+  "version": "1.0.0",
+  "description": "outil de modelisation",
+  "main": "register.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OlivierRoss/Tuiles.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OlivierRoss/Tuiles/issues"
+  },
+  "homepage": "https://github.com/OlivierRoss/Tuiles",
+  "devDependencies": {
+      "grunt": "~0.4.5",
+      "grunt-contrib-jshint": "~0.10.0",
+      "grunt-contrib-nodeunit": "~0.4.1",
+      "grunt-contrib-uglify": "~0.5.0"
+  }
+}

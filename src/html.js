@@ -48,6 +48,7 @@ var xTuilesElement = {
                 width: calc(100% - 10px);
                 height: calc(100% - 10px);
                 margin: 5px;
+                display: inline-block;
             }
             .compteur {
                 text-align: center;
