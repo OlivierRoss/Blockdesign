@@ -5,18 +5,15 @@ xTuilesElement.methods = {
         });
     },
     drawComponents: function () {
-        var svg = this.svg.node();
-        var canvas = this.canvas.node();
-        svg.offsetWidth = canvas.offsetWidth;
+        this.svg.offsetWidth = this.canvas.offsetWidth;
         this.dessiner();
     },
     calculerMetriques: function (lines, columns) {
-      if(!lines && !columns){
-        lines = this.nblignes = (Math.max(this.hauteur.value, 1) - 1) * 2 + 1;
-        columns = this.nbcarresligne = Math.max(this.largeur.value, 1);
-      }
+        if(!lines && !columns){
+            lines = this.nblignes = (Math.max(this.hauteur.value, 1) - 1) * 2 + 1;
+            columns = this.nbcarresligne = Math.max(this.largeur.value, 1);
+        }
 
-        var canvas = this.canvas.node();
         this.diagonale = Math.min((canvas.offsetWidth - 2) / columns, (canvas.offsetHeight - 2) / ((lines / 2) + 0.5));
         this.cote = diagonal2Side(this.diagonale);
         this.decalageRotation = (this.diagonale - this.cote) / 2;
@@ -26,15 +23,19 @@ xTuilesElement.methods = {
         this.dessiner();
     },
     dessiner: function () {
-        this.calculerMetriques();
-        this.lignes = this.matrix.extract(this.nblignes, this.nbcarresligne);
-        this.resetHandicap();
-        this.nettoyer();
-        this.afficher();
-        this.afficherDecompte();
+        this.showComputing();
+        setTimeout(function () {
+            this.calculerMetriques();
+            this.lignes = this.matrix.extract(this.nblignes, this.nbcarresligne);
+            this.resetHandicap();
+            this.nettoyer();
+            this.afficher();
+            this.afficherDecompte();
+            this.hideComputing();
+        }.bind(this), 0);
     },
     nettoyer: function () {
-        this.svg.selectAll("g.ligne").remove();
+        while (this.svg.firstChild) this.svg.removeChild(this.svg.firstChild);
     },
     resetHandicap: function () {
         var newCount = this.countColors();
@@ -42,46 +43,39 @@ xTuilesElement.methods = {
             this.couleurs[c].handicap = (this.couleurs[c].compte - (newCount[c] || 0)) || 0;
         }
     },
-    mouseDown: function (element) {
-        this.mode == "manual" ? this.changecolor(element) : this.setCursor(element.node());
+    mouseDown: function (event) {
+        this.mode == "manual" ? this.changecolor(event.target, event.altKey) : this.setCursor(event.target);
     },
-    mouseOver: function (element) {
-        if(this.mode == "manual" && this.sourisenfoncee) this.changecolor(element);
+    mouseOver: function (event) {
+        if(this.mode == "manual" && this.sourisenfoncee) this.changecolor(event.target, event.altKey);
     },
     afficher: function (columns, distance) {
         columns = columns || 1;
         distance = distance || 0;
         var me = this;
 
-        // Creation des lignes
-        var groupes = this.svg.selectAll("g.ligne").data(this.lignes).enter().append("g")
-        .attr("index", function (d, i) { return i })
-        .attr("class", "ligne")
-        .attr("index", function (d, i) { return i})
-        .attr("transform", function (d, i) {
-            if(i % 2 === 0){
-                return "translate(0, " + me.diagonale * i / 2 + ")"
-            }
-            else {
-                return "translate(" + me.diagonale / 2 + ", " + me.diagonale * i / 2 + ")"
-            }
-        });
+        // Alternative
+        this.lignes.forEach(function drawLine(line, lineIndex) {
+            var xTranslateAddition = lineIndex % 2 == 0 ? 0 : me.diagonale / 2;
+            line.forEach(function drawCell(cell, cellIndex) {
+                var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                rect.setAttribute('data-x', cellIndex);
+                rect.setAttribute('data-y', lineIndex);
+                rect.setAttribute('x', (2 * me.decalageRotation) + xTranslateAddition + (cellIndex * me.diagonale + me.decalageRotation + (Math.floor(cellIndex / columns) * distance)));
+                rect.setAttribute('y', me.decalageRotation + (me.diagonale * lineIndex / 2));
+                rect.setAttribute('height', me.cote);
+                rect.setAttribute('width', me.cote);
+                rect.setAttribute('fill-opacity', cell.opacity);
+                rect.setAttribute('fill', cell.fill);
+                rect.setAttribute('stroke', '#424242');
+                rect.setAttribute('fill', cell.fill);
+                rect.onmouseover = me.mouseOver.bind(me);
+                rect.onmousedown = me.mouseDown.bind(me);
 
-        // Creation des carres
-        groupes.selectAll("rect").data(function(d) { return d; }).enter().append("rect")
-        .attr("index", function (d, i) { return i })
-        .attr("class", "carre")
-        .attr("index", function (d, i) { return i})
-        .attr("height", this.cote)
-        .attr("width", this.cote)
-        .attr("x", function (d, i) { return (i * me.diagonale) + me.decalageRotation + (Math.floor(i / columns) * distance) })
-        .attr("y", this.decalageRotation)
-        .attr("fill-opacity", function(d) { return d.opacity})
-        .attr("fill", function(d) { return d.fill })
-        .attr("stroke", "#424242")
-        .attr("stroke-width", "1px")
-        .on("mousedown", function () { me.mouseDown.call(me, d3.select(this)) } )
-        .on("mouseover", function () { me.mouseOver.call(me, d3.select(this)) } )
+                me.svg.appendChild(rect);
+                TweenLite.set(rect, {rotation: 45});
+            });
+        });
     },
 
     ///// Sauvegarde + enregistrement /////
@@ -134,33 +128,30 @@ xTuilesElement.methods = {
             document.getElementById(couleur.code + "-counter").innerHTML = couleur.compte - couleur.handicap;
         }
     },
-    changecolor: function (element) {
-        var couleur = this.getCouleur();
-        var datum = this.matrix.get(element.node());
+    changecolor: function (element, erase) {
+        var couleur = {fill: this.couleur, opacity: erase ? 0 : 1};
+        var datum = this.matrix.get(element);
 
         if(datum.opacity == 0 && couleur.opacity == 0) return; // pas de changement
         else if(datum.opacity == 0 && couleur.opacity != 0){ // nouvelle case
-            element.attr("fill", couleur.fill);
-            element.attr("fill-opacity", couleur.opacity);
+            element.setAttribute("fill", couleur.fill);
+            element.setAttribute("fill-opacity", couleur.opacity);
             ++this.couleurs[couleur.fill].compte;
         }
         else if(datum.opacity != 0 && couleur.opacity == 0){ // efface
             --this.couleurs[datum.fill].compte;
-            element.attr("fill", couleur.fill);
-            element.attr("fill-opacity", couleur.opacity);
+            element.setAttribute("fill", couleur.fill);
+            element.setAttribute("fill-opacity", couleur.opacity);
         }
         else { // changement couleur
             --this.couleurs[datum.fill].compte;
-            element.attr("fill", couleur.fill);
-            element.attr("fill-opacity", couleur.opacity);
+            element.setAttribute("fill", couleur.fill);
+            element.setAttribute("fill-opacity", couleur.opacity);
             ++this.couleurs[couleur.fill].compte;
         }
 
-        this.matrix.updateCell(element.node(), couleur.fill, couleur.opacity);
+        this.matrix.updateCell(element, couleur.fill, couleur.opacity);
         if(!this.menuHidden) this.afficherDecompte();
-    },
-    getCouleur: function () {
-        return {fill: this.couleur, opacity: d3.event.altKey ? 0 : 1};
     },
     createColorCounter: function (color) {
         var li = document.createElement("li");
@@ -251,7 +242,7 @@ xTuilesElement.methods = {
             menu.style.left = "-" + this.menuWidth;
         }
         document.getElementById("conteneur").style.left = document.getElementById("menu").style.width = this.menuHidden ? "100px": "0px" ;
-        for(var i = 200; i < 1000; i+= 200) window.setTimeout(this.drawComponents.bind(this), i);
+        this.drawComponents();
         this.menuHidden = !this.menuHidden;
     },
     //--- Togglers ---//
@@ -275,7 +266,6 @@ xTuilesElement.methods = {
         var symbolText = document.createElement("div");
         symbolText.innerHTML = caracter + " : " + JSON.stringify(symbol);
         document.body.appendChild(symbolText);
-
     },
     drawText: function () {
         if(this.mode != "text" || !this.cursorElement) return;
@@ -309,6 +299,32 @@ xTuilesElement.methods = {
         this.hideCursor();
         this.cursorElement = element;
         this.showCursor();
-    }
+    },
     //--- Symboles ---//
+
+    // --- Waiting ---//
+    showComputing: function () {
+        var opts = {
+              lines: 12 // The number of lines to draw
+            , length: 4 // The length of each line
+            , width: 2 // The line thickness
+            , radius: 3 // The radius of the inner circle
+            , scale: 1 // Scales overall size of the spinner
+            , corners: 1 // Corner roundness (0..1)
+            , color: '#ffffff' // #rgb or #rrggbb or array of colors
+            , opacity: 0.25 // Opacity of the lines
+            , rotate: 0 // The rotation offset
+            , direction: 1 // 1: clockwise, -1: counterclockwise
+            , speed: 1 // Rounds per second
+            , trail: 60 // Afterglow percentage
+            , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+            , zIndex: 2e9 // The z-index (defaults to 2000000000)
+            , className: 'spinner' // The CSS class to assign to the spinner
+            , position: 'absolute' // Element positioning
+        };
+        this.spinner = new Spinner(opts).spin(this.header);
+    },
+    hideComputing: function () {
+        this.spinner.stop();
+    }
 }

@@ -29,14 +29,14 @@ xTuilesElement.lifecycle = {
         this.sampleDisplay = "h";
 
         // Composants
-        this.hauteur = d3.select("#hauteur").node();
-        this.largeur = d3.select("#largeur").node();
-        this.canvas = d3.select("#canvas");
+        this.hauteur = document.getElementById("hauteur");
+        this.largeur = document.getElementById("largeur");
+        this.header = document.getElementById("header");
+        this.canvas = document.getElementById("canvas");
+        this.svg = document.getElementById("svg");
     },
     inserted: function () {
-        // Creation du canvas
-        var canvas = this.canvas.node();
-        this.svg = this.canvas.append("svg").attr("id", "svg").attr("height", canvas.offsetHeight).attr("width", "100%");
+        this.svg.setAttribute('height', this.canvas.offsetHeight);
 
         ///// Couleurs
         // Echantillons footer
@@ -53,8 +53,8 @@ xTuilesElement.lifecycle = {
         // Evenements
         this.hauteur.onchange = this.dessiner.bind(this);
         this.largeur.onchange = this.dessiner.bind(this);
-        this.canvas.node().onmousedown = function () { this.sourisenfoncee = true }.bind(this);
-        this.canvas.node().onmouseup = function () { this.sourisenfoncee = false }.bind(this);
+        this.canvas.onmousedown = function () { this.sourisenfoncee = true }.bind(this);
+        this.canvas.onmouseup = function () { this.sourisenfoncee = false }.bind(this);
         document.getElementById("export").onclick = this.export.bind(this);
         document.getElementById("bouton-menu").onclick = this.toggleMenu.bind(this);
         document.getElementById("open").onclick = function () { document.getElementById("upload-file").click() };

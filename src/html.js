@@ -26,10 +26,6 @@ var xTuilesElement = {
                 height: 20px;
                 float: right;
             }
-            .carre {
-                transform-origin: 50% 50%;
-                transform: rotate(45deg);
-            }
             .container-echantillon-v:hover, .container-echantillon-h:hover, .selected {
                 background-color: white;
             }
@@ -101,6 +97,7 @@ var xTuilesElement = {
             }
             .fa-bars, .fa-arrows-v, .fa-arrows-h, .fa-download, .fa-upload, .fa-check, .fa-file-pdf-o, .fa-font, .fa-toggle-on, .fa-toggle-off, .fa-pencil, .fa-repeat {
               color: white;
+              cursor: pointer;
             }
             #conteneur {
                 position: absolute;
@@ -108,7 +105,7 @@ var xTuilesElement = {
                 top: 0px;
                 bottom: 0px;
                 right: 0px;
-                transition: left 1s ease;
+                transition: left 0.5s ease;
             }
             #menu {
                 position: absolute;
@@ -118,7 +115,7 @@ var xTuilesElement = {
                 width: 0px;
                 background-color: grey;
                 overflow: auto;
-                transition: left 1s ease;
+                transition: left 0.5s ease;
             }
             .dropdown {
                 position: relative;
@@ -198,7 +195,9 @@ var xTuilesElement = {
                     <i id="mode-toggler-manual" class="fa fa-lg fa-pencil" title="Mode manuel"></i>
                 </div>
             </div>
-            <div id="canvas" style="background-size: 100% 100%;"></div>
+            <div id="canvas" style="background-size: 100% 100%;">
+                <svg xmlns="http://www.w3.org/2000/svg" id="svg" width="100%"></svg>
+            </div>
             <div id="footer">
                 <div id="input-text-container"><input id="input-text" type="text"></div>
                 <div id="color-selector-h"></div>

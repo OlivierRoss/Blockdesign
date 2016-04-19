@@ -1,11 +1,11 @@
 function getSmallestRectangleCoordinates (matrix) {
-    var rows = []; 
+    var rows = [];
     var columns = [];
     matrix.forEach(function (row, rowIndex) {
         var rowUsed = false;
         row.forEach(function (cell, columnIndex) {
             if(cell.opacity){
-                rowUsed = true; 
+                rowUsed = true;
                 columns.push(columnIndex);
             }
         });
@@ -22,7 +22,7 @@ function getSmallestMatrix (matrix) {
 function getMatrixExtract (x1, y1, x2, y2, matrix) {
     var extract = [];
     matrix.slice(y1, y2+1).forEach(function (el, i){
-        extract.push(el.slice(x1, x2+1))            
+        extract.push(el.slice(x1, x2+1))
     });
     return extract;
 }
@@ -87,6 +87,7 @@ function deepCopy (obj) {
 }
 
 function Matrix (matrix) {
+    // Attributes
     var me = this;
     this.baseElement = {fill: "#000000", opacity: 0};
     this.matrix = matrix || [[{fill: "#000000", opacity: 0}]];
@@ -108,8 +109,8 @@ function Matrix (matrix) {
         });
     }
 
-    // Public object
-    var public_members = {
+    // Public functions
+    return {
         extract: function (rows, columns) {
             if(rows > me.matrix.length) {
                 addRows(rows - me.matrix.length);
@@ -126,7 +127,7 @@ function Matrix (matrix) {
         },
         get: function (cell) {
             if(cell instanceof SVGElement) {
-                return me.matrix[cell.parentNode.getAttribute("index")][cell.getAttribute("index")];
+                return me.matrix[cell.getAttribute("data-y")][cell.getAttribute("data-x")];
             }
             else if(cell.hasOwnProperty("x") && cell.hasOwnProperty("y")) {
                 return me.matrix[cell.y][cell.x];
@@ -139,5 +140,4 @@ function Matrix (matrix) {
             return me.matrix;
         }
     };
-    return public_members;
 }
