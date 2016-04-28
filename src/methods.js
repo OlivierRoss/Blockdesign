@@ -72,8 +72,13 @@ xTuilesElement.methods = {
                 rect.onmouseover = me.mouseOver.bind(me);
                 rect.onmousedown = me.mouseDown.bind(me);
 
-                me.svg.appendChild(rect);
-                TweenLite.set(rect, {rotation: 45});
+                if(!me.isFirefox) {
+                    me.svg.appendChild(rect);
+                    TweenLite.set(rect, {rotation: 45});
+                }
+                else {
+                    rect.setAttribute('class', 'carre');
+                }
             });
         });
     },
@@ -265,17 +270,20 @@ xTuilesElement.methods = {
         this.symbols[caracter] = symbol;
         var symbolText = document.createElement("div");
         symbolText.innerHTML = caracter + " : " + JSON.stringify(symbol);
-        document.body.appendChild(symbolText);
+        //document.body.appendChild(symbolText);
     },
     drawText: function () {
+        var input = document.getElementById("input-text");
         if(this.mode != "text" || !this.cursorElement) return;
-        var text = document.getElementById("input-text").value;
+        var text = input.value;
         for(var i = 0; i < text.length; ++i) {
             var symbol = this.symbols[text[i]] || this.symbols["default"];
-            var column = this.cursorElement.getAttribute("index");
-            var symbolWidth = this.writeSymbol(this.cursorElement.parentNode.getAttribute("index"), column, symbol);
-            this.setCursor(this.cursorElement.parentNode.childNodes[parseInt(column) + symbolWidth + 2]);
+            var column = parseInt(this.cursorElement.getAttribute("data-x"));
+            var row = parseInt(this.cursorElement.getAttribute("data-y"));
+            var symbolWidth = this.writeSymbol(row, column, symbol);
+            this.setCursor(document.querySelector("rect[data-x='" + (column + symbolWidth + 2) + "'][data-y='" + row + "']"));
         }
+        input.value = "";
         this.dessiner();
     },
     // Retourne la largeur maximale pour etre capable de deplacer le curseur
