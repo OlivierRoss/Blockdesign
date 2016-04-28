@@ -27,6 +27,7 @@ xTuilesElement.lifecycle = {
         this.matrix = new Matrix();
         this.symbols = standardSymbols;
         this.sampleDisplay = "h";
+        this.isFirefox = (navigator.userAgent.indexOf("Firefox") > 0);
 
         // Composants
         this.hauteur = document.getElementById("hauteur");
