@@ -1,6 +1,10 @@
 var xTuilesElement = {
     content: function () {/*
         <style>
+            .carre {
+                transform-origin: 50% 50%;
+                transform: rotate(45deg);
+            }
             @keyframes blink {
                50% { stroke: #ff0000; stroke-width: 3px; }
             }

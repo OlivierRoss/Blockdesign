@@ -35,7 +35,7 @@ xTuilesElement.methods = {
         }.bind(this), 0);
     },
     nettoyer: function () {
-        while (this.svg.firstChild) this.svg.removeChild(this.svg.firstChild);
+        for(var svg = this.svg; svg.firstChild;) svg.removeChild(svg.firstChild);
     },
     resetHandicap: function () {
         var newCount = this.countColors();
@@ -54,32 +54,42 @@ xTuilesElement.methods = {
         distance = distance || 0;
         var me = this;
 
-        // Alternative
         this.lignes.forEach(function drawLine(line, lineIndex) {
             var xTranslateAddition = lineIndex % 2 == 0 ? 0 : me.diagonale / 2;
+
+            var groupe = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            groupe.setAttribute("transform", (function (i) {
+                if(i % 2 === 0){
+                    return "translate(0, " + me.diagonale * i / 2 + ")"
+                }
+                else {
+                    return "translate(" + me.diagonale / 2 + ", " + me.diagonale * i / 2 + ")"
+                }
+            })(lineIndex));
+            me.svg.appendChild(groupe);
             line.forEach(function drawCell(cell, cellIndex) {
                 var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
                 rect.setAttribute('data-x', cellIndex);
                 rect.setAttribute('data-y', lineIndex);
-                rect.setAttribute('x', (2 * me.decalageRotation) + xTranslateAddition + (cellIndex * me.diagonale + me.decalageRotation + (Math.floor(cellIndex / columns) * distance)));
-                rect.setAttribute('y', me.decalageRotation + (me.diagonale * lineIndex / 2));
+                rect.setAttribute('x', (2 * me.decalageRotation) + (cellIndex * me.diagonale + me.decalageRotation + (Math.floor(cellIndex / columns) * distance)));
+                rect.setAttribute('y', me.decalageRotation);
                 rect.setAttribute('height', me.cote);
                 rect.setAttribute('width', me.cote);
                 rect.setAttribute('fill-opacity', cell.opacity);
                 rect.setAttribute('fill', cell.fill);
                 rect.setAttribute('stroke', '#424242');
-                rect.setAttribute('fill', cell.fill);
+                rect.setAttribute('stroke-width', '1px');
                 rect.onmouseover = me.mouseOver.bind(me);
                 rect.onmousedown = me.mouseDown.bind(me);
 
-                if(!me.isFirefox) {
-                    me.svg.appendChild(rect);
-                    TweenLite.set(rect, {rotation: 45});
-                }
-                else {
-                    rect.setAttribute('class', 'carre');
-                }
+                groupe.appendChild(rect);
+                me.isFirefox ? TweenLite.set(rect, {rotation: 45}) : rect.setAttribute('class', 'carre');
+
+                // Doit etre avant pour FF
+                //groupe.appendChild(rect);
             });
+            // Doit etre avant pour FF
+            //me.svg.appendChild(groupe);
         });
     },
 
