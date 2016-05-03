@@ -49,6 +49,9 @@ xTuilesElement.methods = {
     mouseOver: function (event) {
         if(this.mode == "manual" && this.sourisenfoncee) this.changecolor(event.target, event.altKey);
     },
+    groupeTranslation: function (index) {
+        return "translate(" + ((index % 2 === 0) ? 0 : this.diagonale / 2) + ", " + this.diagonale * index / 2 + ")"
+    },
     afficher: function (columns, distance) {
         columns = columns || 1;
         distance = distance || 0;
@@ -58,15 +61,9 @@ xTuilesElement.methods = {
             var xTranslateAddition = lineIndex % 2 == 0 ? 0 : me.diagonale / 2;
 
             var groupe = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            groupe.setAttribute("transform", (function (i) {
-                if(i % 2 === 0){
-                    return "translate(0, " + me.diagonale * i / 2 + ")"
-                }
-                else {
-                    return "translate(" + me.diagonale / 2 + ", " + me.diagonale * i / 2 + ")"
-                }
-            })(lineIndex));
+            groupe.setAttribute("transform", me.groupeTranslation(lineIndex));
             me.svg.appendChild(groupe);
+
             line.forEach(function drawCell(cell, cellIndex) {
                 var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
                 rect.setAttribute('data-x', cellIndex);
@@ -81,15 +78,9 @@ xTuilesElement.methods = {
                 rect.setAttribute('stroke-width', '1px');
                 rect.onmouseover = me.mouseOver.bind(me);
                 rect.onmousedown = me.mouseDown.bind(me);
-
                 groupe.appendChild(rect);
-                me.isFirefox ? TweenLite.set(rect, {rotation: 45}) : rect.setAttribute('class', 'carre');
-
-                // Doit etre avant pour FF
-                //groupe.appendChild(rect);
+                me.rotate(rect);
             });
-            // Doit etre avant pour FF
-            //me.svg.appendChild(groupe);
         });
     },
 

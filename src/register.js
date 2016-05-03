@@ -72,6 +72,9 @@ xTuilesElement.lifecycle = {
 
         // Finalisation
         this.dessiner();
+
+        // Fonction de rotation
+        this.rotate = this.isFirefox ? function (rect) { TweenLite.set(rect, {rotation: 45}) } : function (rect) { rect.setAttribute('class', 'carre') };
     }
 };
 
