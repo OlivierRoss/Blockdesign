@@ -1,5 +1,5 @@
-var xTuilesElement = {
-    content: function () {/*
+var xTuilesElement = class extends XTagElement {
+  '::template' (){`
         <style>
             .carre {
                 transform-origin: 50% 50%;
@@ -211,6 +211,6 @@ var xTuilesElement = {
                 </div>
             </div>
         </div>
-    */
-    }
+   ` 
+  }
 };
